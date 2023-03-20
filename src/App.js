@@ -1,24 +1,131 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import { Pick, LoginCounter, Dashboard, Screen } from "./components";
+import { Routes, Route, useLocation } from "react-router-dom";
+import Header from "./components/Header";
+// import Print from "./components/Print";
+import Admin from "./components/Admin";
+import Counter from "./components/admin/Counter";
+import Home from "./components/admin/Home";
+import Staff from "./components/admin/Staff";
+import Media from "./components/admin/Media";
+import Setting from "./components/admin/Setting";
+import Group from "./components/admin/Group";
+import Banner from "./components/admin/setting/Banner";
+import Theme from "./components/admin/setting/Theme";
+import RunningText from "./components/admin/setting/RunningText";
+import PrintSetting from "./components/admin/setting/PrintSetting";
+import AdminRoute from "./utils/AdminRoute";
+import axios from "axios";
+import { applyTheme } from "./themes/option";
+import Profile from "./components/admin/Profile";
+import LoginRoute from "./utils/LoginRoute";
 
 function App() {
+  const [isNav, setIsNav] = useState(true);
+  const [theme, setTheme] = useState("");
+  const [text, setText] = useState("");
+  const [logoHeader, setLogoHeader] = useState("");
+  const [durasi, setDurasi] = useState(0);
+  const [fileMedia, setFileMedia] = useState([]);
+  const location = useLocation();
+
+  useEffect(() => {
+    const path = location.pathname;
+    // console.log(path);
+    if (path === "/login") {
+      setIsNav(true);
+    } else if (path === "/print") {
+      setIsNav(true);
+    } else {
+      setIsNav(false);
+    }
+
+    const getSetTheme = async () => {
+      const set = await axios.get("http://localhost:3001/setting");
+
+      // document.body.classList.add(`theme-${set.data.theme.toLowerCase()}`);
+      // console.log(set.data.theme);
+      // setTheme("theme-" + set.data.theme.toLowerCase());
+      setTheme(applyTheme(set.data.theme));
+      setText(set.data.text_header);
+      setLogoHeader(set.data.logo_header);
+      setDurasi(set.data.durasi_transition);
+      setFileMedia(JSON.parse(set.data.file_banner));
+    };
+
+    getSetTheme();
+    // console.log(logoHeader);
+  }, [location]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {!isNav && <Header text={text} logoHeader={logoHeader} />}
+      <div
+        className={`w-full ${
+          isNav ? "h-full" : "h-[92vh] mt-[8vh]"
+        } flex justify-center items-center bg-gray-100 relative theme-default bg-custom-third overflow-y-hidden`}
+      >
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Pick theme={theme} headerText={text} logoHeader={logoHeader} />
+            }
+          />
+          <Route element={<LoginRoute />}>
+            <Route path="/login" element={<LoginCounter />} />
+          </Route>
+          <Route element={<AdminRoute />}>
+            <Route path="/dashboard" element={<Dashboard theme={theme} />} />
+          </Route>
+          <Route path="/screen" element={<Screen theme={theme} />} />
+          {/* <Route
+            path="/print"
+            element={<Print headerText={text} logoHeader={logoHeader} />}
+          /> */}
+          <Route element={<AdminRoute />}>
+            <Route path="/admin" element={<Admin theme={theme} />}>
+              <Route path="/admin/home" element={<Home />} />
+              <Route
+                path="/admin/counter"
+                element={<Counter theme={theme} />}
+              />
+              <Route path="/admin/group" element={<Group theme={theme} />} />
+              <Route path="/admin/staff" element={<Staff theme={theme} />} />
+              <Route path="/admin/media" element={<Media theme={theme} />} />
+              <Route path="/admin/settings" element={<Setting />}>
+                <Route
+                  path="/admin/settings/banner"
+                  element={
+                    <Banner
+                      theme={theme}
+                      durasiTransition={durasi}
+                      fileMedia={fileMedia}
+                    />
+                  }
+                />
+                <Route
+                  path="/admin/settings/theme"
+                  element={<Theme defaultTheme={theme} />}
+                />
+                <Route
+                  path="/admin/settings/runningtext"
+                  element={<RunningText theme={theme} />}
+                />
+                <Route
+                  path="/admin/settings/print"
+                  element={<PrintSetting theme={theme} />}
+                />
+              </Route>
+              <Route
+                path="/admin/profile"
+                element={<Profile theme={theme} />}
+              />
+            </Route>
+          </Route>
+        </Routes>
+      </div>
+    </>
   );
 }
 

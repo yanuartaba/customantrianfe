@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  antrian-app:
+    container_name: app-dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      REACT_APP_BACKEND_URL: http://localhost:3005
+    volumes:
+      - ./src:/app/src
+    ports:
+      - "8083:8083"
+    labels:
+      - "traefik.http.routers.app.rule=Host(`app.localhost`)"
+      - "traefik.http.services.app.loadbalancer.server.port=8083"
+    depends_on:
+      - traefik
+    networks:
+      - traefik
+
+  traefik:
+    image: traefik:v2.9
+    command: --api.insecure=true --providers.docker
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - traefik
+
+networks:
+  traefik: {}
