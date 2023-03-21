@@ -48,7 +48,7 @@ function Header({ text, logoHeader }) {
         <div className="flex items-center gap-3">
           <img
             className="h-[50px] w-auto"
-            src={`http://localhost:3001/files/${logoHeader}`}
+            src={`${process.env.REACT_APP_BACKEND_URL}/files/${logoHeader}`}
             alt=""
           />
           <h3 className="text-2xl font-bold">{text}</h3>

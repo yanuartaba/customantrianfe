@@ -41,7 +41,9 @@ function App() {
     }
 
     const getSetTheme = async () => {
-      const set = await axios.get("http://localhost:3001/setting");
+      const set = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/setting`
+      );
 
       // document.body.classList.add(`theme-${set.data.theme.toLowerCase()}`);
       // console.log(set.data.theme);

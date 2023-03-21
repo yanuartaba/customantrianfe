@@ -20,7 +20,7 @@ function RunningText({ theme }) {
       running_text: runningText,
     };
 
-    await axios.patch(`http://localhost:3001/setting`, payload, {
+    await axios.patch(`${process.env.REACT_APP_BACKEND_URL}/setting`, payload, {
       headers: { codepipe: "GJddPyb9jqK1Bxm68wqLRcYsNPt2UKJC" },
     });
 
@@ -33,7 +33,9 @@ function RunningText({ theme }) {
   useEffect(() => {
     const getSetting = async () => {
       setIsLoading(true);
-      const set = await axios.get("http://localhost:3001/setting");
+      const set = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/setting`
+      );
 
       setIsActive(set.data.running_text_active);
       setRunningText(set.data.running_text);

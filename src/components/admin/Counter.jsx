@@ -111,9 +111,12 @@ function Counter({ theme }) {
 
       const token = JSON.parse(dataToken);
       try {
-        await axios.delete(`http://localhost:3001/counter/${counterId}`, {
-          headers: { Authorization: `Bearer ${token.access_token}` },
-        });
+        await axios.delete(
+          `${process.env.REACT_APP_BACKEND_URL}/counter/${counterId}`,
+          {
+            headers: { Authorization: `Bearer ${token.access_token}` },
+          }
+        );
         setIsLoading(true);
         setTimeout(() => {
           getCounters();
@@ -131,7 +134,9 @@ function Counter({ theme }) {
   };
 
   const getCounters = async () => {
-    const data = await axios.get("http://localhost:3001/counter");
+    const data = await axios.get(
+      `${process.env.REACT_APP_BACKEND_URL}/counter`
+    );
     console.log(data.data);
     setTimeout(() => {
       setIsLoading(false);

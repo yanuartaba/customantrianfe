@@ -28,9 +28,13 @@ function EditUserModal(props) {
     };
 
     try {
-      await axios.patch(`http://localhost:3001/users/${user.id}`, payload, {
-        headers: { Authorization: `Bearer ${token.access_token}` },
-      });
+      await axios.patch(
+        `${process.env.REACT_APP_BACKEND_URL}/users/${user.id}`,
+        payload,
+        {
+          headers: { Authorization: `Bearer ${token.access_token}` },
+        }
+      );
 
       toggleEdit(false);
       navigate(0);
@@ -49,7 +53,7 @@ function EditUserModal(props) {
     formData.append("file", file);
     try {
       const res = await axios.post(
-        "http://localhost:3001/menus/file",
+        `${process.env.REACT_APP_BACKEND_URL}/menus/file`,
         formData,
         {
           headers: {
@@ -171,7 +175,10 @@ function EditUserModal(props) {
                 </div>
 
                 <div className="flex flex-col">
-                  <img src={`http://localhost:3001/files/${image}`} alt="" />
+                  <img
+                    src={`${process.env.REACT_APP_BACKEND_URL}/files/${image}`}
+                    alt=""
+                  />
                   <label>Image</label>
                   <input onChange={uploadFile} type="file" />
                 </div>

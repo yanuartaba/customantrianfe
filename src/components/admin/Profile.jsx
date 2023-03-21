@@ -31,7 +31,7 @@ function Profile({ theme }) {
       const token = JSON.parse(dataToken);
 
       await axios
-        .get(`http://localhost:3001/users/me`, {
+        .get(`${process.env.REACT_APP_BACKEND_URL}/users/me`, {
           headers: { Authorization: `Bearer ${token.access_token}` },
         })
         .then((res) => {
@@ -104,7 +104,7 @@ function Profile({ theme }) {
     try {
       setIsLoading(true);
       await axios
-        .patch(`http://localhost:3001/users`, payload, {
+        .patch(`${process.env.REACT_APP_BACKEND_URL}/users`, payload, {
           headers: { Authorization: `Bearer ${token.access_token}` },
         })
         .then((res) => {
@@ -129,7 +129,7 @@ function Profile({ theme }) {
     formData.append("file", file);
     try {
       const res = await axios.post(
-        "http://localhost:3001/menus/file",
+        `${process.env.REACT_APP_BACKEND_URL}/menus/file`,
         formData,
         {
           headers: {
@@ -212,7 +212,7 @@ function Profile({ theme }) {
             <div className="flex flex-col justify-center items-center relative">
               <img
                 className="w-[25rem] h-auto"
-                src={`http://localhost:3001/files/${profile.avatar}`}
+                src={`${process.env.REACT_APP_BACKEND_URL}/files/${profile.avatar}`}
                 alt=""
               />
               <button

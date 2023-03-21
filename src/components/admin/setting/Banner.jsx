@@ -54,7 +54,7 @@ function Banner({ theme, durasiTransition, fileMedia }) {
 
     // console.log(JSON.stringify(selectedMedia[0]));
 
-    await axios.patch(`http://localhost:3001/setting`, payload, {
+    await axios.patch(`${process.env.REACT_APP_BACKEND_URL}/setting`, payload, {
       // headers: { Authorization: `Bearer ${token.access_token}` },
       headers: { codepipe: "GJddPyb9jqK1Bxm68wqLRcYsNPt2UKJC" },
     });
@@ -92,7 +92,9 @@ function Banner({ theme, durasiTransition, fileMedia }) {
   useEffect(() => {
     const getMedias = async () => {
       setIsLoading(true);
-      const datas = await axios.get("http://localhost:3001/media");
+      const datas = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/media`
+      );
 
       const filter = datas.data.filter((data) => data.isVideo === false);
 

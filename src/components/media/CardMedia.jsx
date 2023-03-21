@@ -18,7 +18,7 @@ function CardMedia({ props, theme }) {
           >
             <img
               className="p-4"
-              src={`http://localhost:3001/files/${url}`}
+              src={`${process.env.REACT_APP_BACKEND_URL}/files/${url}`}
               alt=""
             />
             {/* <div className="w-full p-4 flex flex-row justify-between bg-blue-500 text-gray-50">

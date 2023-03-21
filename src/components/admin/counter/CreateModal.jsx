@@ -21,9 +21,13 @@ function CreateModal(props) {
     };
 
     try {
-      await axios.post("http://localhost:3001/counter", payload, {
-        headers: { Authorization: `Bearer ${token.access_token}` },
-      });
+      await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/counter`,
+        payload,
+        {
+          headers: { Authorization: `Bearer ${token.access_token}` },
+        }
+      );
 
       toggleShow(false);
       navigate(0);
@@ -34,7 +38,9 @@ function CreateModal(props) {
 
   useEffect(() => {
     const getMenus = async () => {
-      const datas = await axios.get("http://localhost:3001/menus");
+      const datas = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/menus`
+      );
 
       setMenus(datas.data);
     };

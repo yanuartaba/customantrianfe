@@ -53,7 +53,7 @@ function Staff({ theme }) {
         <>
           <img
             className="py-3 h-[150px] w-auto"
-            src={`http://localhost:3001/files/${row.avatar}`}
+            src={`${process.env.REACT_APP_BACKEND_URL}/files/${row.avatar}`}
             alt=""
           />
         </>
@@ -124,7 +124,7 @@ function Staff({ theme }) {
     const dataToken = localStorage.getItem("token-counter");
 
     const token = JSON.parse(dataToken);
-    const data = await axios.get("http://localhost:3001/users", {
+    const data = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/users`, {
       headers: { Authorization: `Bearer ${token.access_token}` },
     });
 

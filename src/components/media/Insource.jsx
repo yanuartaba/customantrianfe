@@ -56,7 +56,7 @@ function Insource() {
       formData.append("file", file);
 
       const res = await axios.post(
-        "http://localhost:3001/menus/file",
+        `${process.env.REACT_APP_BACKEND_URL}/menus/file`,
         formData,
         {
           headers: {
@@ -76,7 +76,10 @@ function Insource() {
 
       setTimeout(async () => {
         try {
-          await axios.post("http://localhost:3001/media/upload", payload);
+          await axios.post(
+            `${process.env.REACT_APP_BACKEND_URL}/media/upload`,
+            payload
+          );
           setIsLoading(false);
           setFile(null);
           setCanUpload(false);

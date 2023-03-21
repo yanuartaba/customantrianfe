@@ -25,7 +25,7 @@ function EditModal(props) {
 
     try {
       await axios.patch(
-        `http://localhost:3001/counter/${counter.id}`,
+        `${process.env.REACT_APP_BACKEND_URL}/counter/${counter.id}`,
         payload,
         {
           headers: { Authorization: `Bearer ${token.access_token}` },
@@ -41,7 +41,9 @@ function EditModal(props) {
 
   useEffect(() => {
     const getMenus = async () => {
-      const datas = await axios.get("http://localhost:3001/menus");
+      const datas = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/menus`
+      );
 
       setMenus(datas.data);
     };

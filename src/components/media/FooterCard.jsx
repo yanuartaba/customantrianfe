@@ -11,7 +11,7 @@ function FooterCard({ url, id, theme }) {
   const navigate = useNavigate();
 
   const deleteMedia = async () => {
-    await axios.delete(`http://localhost:3001/media/${id}`);
+    await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/media/${id}`);
 
     navigate(0);
   };

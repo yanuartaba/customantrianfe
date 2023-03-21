@@ -75,7 +75,10 @@ function Outsource() {
     console.log(payload);
 
     try {
-      await axios.post("http://localhost:3001/media/upload", payload);
+      await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/media/upload`,
+        payload
+      );
 
       navigate(0);
     } catch (error) {

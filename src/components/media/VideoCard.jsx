@@ -17,7 +17,7 @@ function VideoCard({ isAsset, url, id, theme }) {
         >
           <video controls muted autoPlay>
             <source
-              src={`http://localhost:3001/files/${url}`}
+              src={`${process.env.REACT_APP_BACKEND_URL}/files/${url}`}
               type="video/mp4"
             ></source>
           </video>

@@ -18,7 +18,9 @@ function Media({ theme }) {
     setIsLoading(true);
 
     setTimeout(async () => {
-      const data = await axios.get("http://localhost:3001/media");
+      const data = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/media`
+      );
       // console.log(data.data);
       setMedia(data.data);
       setIsLoading(false);

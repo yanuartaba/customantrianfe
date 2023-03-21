@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Ilustrasi1 from "../img/illustrator1.png";
 import Bg1 from "../img/bg1.png";
-import CS1 from "../img/cs1.png";
-import { dataMenu } from "../utils/data";
+// import CS1 from "../img/cs1.png";
+// import { dataMenu } from "../utils/data";
 import { CiHospital1 } from "react-icons/ci";
 import { VscError } from "react-icons/vsc";
 import axios from "axios";
@@ -18,18 +18,20 @@ function LoginCounter() {
   const [counters, setCounters] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [errors, setErrors] = useState([]);
-  const [name, setName] = useState("");
-  const [noCounter, setNoCounter] = useState("");
-  const [group, setGroup] = useState("");
+  // const [name, setName] = useState("");
+  // const [noCounter, setNoCounter] = useState("");
+  // const [group, setGroup] = useState("");
 
   const getListCounter = async () => {
-    const listCounter = await axios.get("http://localhost:3001/counter");
+    const listCounter = await axios.get(
+      `${process.env.REACT_APP_BACKEND_URL}/counter`
+    );
 
     // console.log(listCounter.data);
     setCounters(listCounter.data);
   };
 
-  const clearError = () => {};
+  // const clearError = () => {};
 
   useEffect(() => {
     getListCounter();
@@ -50,14 +52,17 @@ function LoginCounter() {
 
     try {
       const token = await axios.post(
-        "http://localhost:3001/auth/signin",
+        `${process.env.REACT_APP_BACKEND_URL}/auth/signin`,
         dataLogin
       );
       localStorage.setItem("token-counter", JSON.stringify(token.data));
       const accessToken = token.data.access_token;
-      const myProfile = await axios.get("http://localhost:3001/users/me", {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      const myProfile = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/users/me`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
       localStorage.setItem("my-profile", JSON.stringify(myProfile.data));
 
       if (!isAdmin) {

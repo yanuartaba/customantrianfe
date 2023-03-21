@@ -74,7 +74,7 @@ function Print({ headerText, logoHeader }) {
       <div className="flex flex-col gap-2 justify-center items-center mt-2">
         <img
           className="h-[40px] w-auto "
-          src={`http://localhost:3001/files/${logoHeader}`}
+          src={`${process.env.REACT_APP_BACKEND_URL}/files/${logoHeader}`}
           alt=""
         />
         <h3 className="font-bold text-md">{headerText}</h3>

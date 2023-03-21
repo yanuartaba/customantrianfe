@@ -11,7 +11,7 @@ function Preview({ media, width, height }) {
     <>
       {/* <h1 className="font-semibold mb-2">Preview</h1> */}
       {!isVideo ? (
-        <img src={`http://localhost:3001/files/${url}`} alt="" />
+        <img src={`${process.env.REACT_APP_BACKEND_URL}/files/${url}`} alt="" />
       ) : isAsset ? (
         // <video src={`http://localhost:3001/files/${url}`} autoPlay />
         <div className="w-auto h-full flex flex-col justify-center items-center ">
@@ -25,7 +25,7 @@ function Preview({ media, width, height }) {
             className="w-full h-full object-cover"
           >
             <source
-              src={`http://localhost:3001/files/${url}`}
+              src={`${process.env.REACT_APP_BACKEND_URL}/files/${url}`}
               type="video/mp4"
             ></source>
           </video>

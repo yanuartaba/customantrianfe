@@ -35,7 +35,7 @@ function Group({ theme }) {
         <>
           <img
             className="py-3 h-[150px] w-auto"
-            src={`http://localhost:3001/files/${row.image}`}
+            src={`${process.env.REACT_APP_BACKEND_URL}/files/${row.image}`}
             alt=""
           />
         </>
@@ -163,9 +163,13 @@ function Group({ theme }) {
       };
 
       try {
-        await axios.patch(`http://localhost:3001/menus/${groupId}`, payload, {
-          headers: { Authorization: `Bearer ${token.access_token}` },
-        });
+        await axios.patch(
+          `${process.env.REACT_APP_BACKEND_URL}/menus/${groupId}`,
+          payload,
+          {
+            headers: { Authorization: `Bearer ${token.access_token}` },
+          }
+        );
         setIsLoading(true);
         setTimeout(() => {
           getCounters();
@@ -198,9 +202,12 @@ function Group({ theme }) {
 
       const token = JSON.parse(dataToken);
       try {
-        await axios.delete(`http://localhost:3001/menus/${groupId}`, {
-          headers: { Authorization: `Bearer ${token.access_token}` },
-        });
+        await axios.delete(
+          `${process.env.REACT_APP_BACKEND_URL}/menus/${groupId}`,
+          {
+            headers: { Authorization: `Bearer ${token.access_token}` },
+          }
+        );
         setIsLoading(true);
         setTimeout(() => {
           getCounters();
@@ -218,7 +225,7 @@ function Group({ theme }) {
   };
 
   const getCounters = async () => {
-    const data = await axios.get("http://localhost:3001/menus");
+    const data = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/menus`);
     console.log(data.data);
     setTimeout(() => {
       setIsLoading(false);

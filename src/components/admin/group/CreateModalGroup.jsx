@@ -33,7 +33,7 @@ function CreateModalGroup(props) {
     };
 
     try {
-      await axios.post("http://localhost:3001/menus", payload, {
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/menus`, payload, {
         headers: { Authorization: `Bearer ${token.access_token}` },
       });
 
@@ -54,7 +54,7 @@ function CreateModalGroup(props) {
     formData.append("file", file);
     try {
       const res = await axios.post(
-        "http://localhost:3001/menus/file",
+        `${process.env.REACT_APP_BACKEND_URL}/menus/file`,
         formData,
         {
           headers: {

@@ -26,9 +26,13 @@ function CreateUserModal(props) {
 
     console.log(payload);
     try {
-      await axios.post("http://localhost:3001/users/add", payload, {
-        headers: { Authorization: `Bearer ${token.access_token}` },
-      });
+      await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/users/add`,
+        payload,
+        {
+          headers: { Authorization: `Bearer ${token.access_token}` },
+        }
+      );
 
       toggleShow(false);
       navigate(0);
@@ -47,7 +51,7 @@ function CreateUserModal(props) {
     formData.append("file", file);
     try {
       const res = await axios.post(
-        "http://localhost:3001/menus/file",
+        `${process.env.REACT_APP_BACKEND_URL}/menus/file`,
         formData,
         {
           headers: {

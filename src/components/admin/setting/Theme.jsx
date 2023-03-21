@@ -26,7 +26,7 @@ function Theme({ defaultTheme }) {
 
     console.log(payload);
 
-    await axios.patch(`http://localhost:3001/setting`, payload, {
+    await axios.patch(`${process.env.REACT_APP_BACKEND_URL}/setting`, payload, {
       headers: { codepipe: "GJddPyb9jqK1Bxm68wqLRcYsNPt2UKJC" },
     });
 
@@ -46,7 +46,7 @@ function Theme({ defaultTheme }) {
       formData.append("file", file);
 
       const res = await axios.post(
-        "http://localhost:3001/menus/file",
+        `${process.env.REACT_APP_BACKEND_URL}/menus/file`,
         formData,
         {
           headers: {
@@ -68,7 +68,9 @@ function Theme({ defaultTheme }) {
   useEffect(() => {
     const getSetting = async () => {
       setIsLoading(true);
-      const set = await axios.get("http://localhost:3001/setting");
+      const set = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/setting`
+      );
 
       setGrid(set.data.grid);
       setTextHeader(set.data.text_header);
