@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/static/css/main.d2384a5d.css",
+    "main.js": "/static/js/main.885ed0c7.js",
+    "static/media/share.mp4": "/static/media/share.f758eefc9ea32c312130.mp4",
+    "static/media/bg1.png": "/static/media/bg1.83af7646657479bfffe1.png",
+    "static/media/Airport_Bell.mp3": "/static/media/Airport_Bell.e55e8aa17e13d4f2c4d7.mp3",
+    "static/media/illustrator1.png": "/static/media/illustrator1.4aac0a630c3c9caa4396.png",
+    "static/media/cs1.png": "/static/media/cs1.343779265ff5955b53db.png",
+    "static/media/cs2.png": "/static/media/cs2.b239fb5f7f840963f143.png",
+    "static/media/cs3.png": "/static/media/cs3.c761c0390eff55d024a9.png",
+    "static/media/cs4.png": "/static/media/cs4.268eaa667832f0dc7635.png",
+    "index.html": "/index.html",
+    "main.d2384a5d.css.map": "/static/css/main.d2384a5d.css.map",
+    "main.885ed0c7.js.map": "/static/js/main.885ed0c7.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d2384a5d.css",
+    "static/js/main.885ed0c7.js"
+  ]
+}
