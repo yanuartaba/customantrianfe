@@ -1,37 +1,40 @@
 import React, { useState, useEffect } from "react";
+
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   IoCaretBackCircleSharp,
   IoCaretForwardCircleSharp,
 } from "react-icons/io5";
-import { Audio } from "react-loader-spinner";
+
+import { BiMessageDots } from "react-icons/bi";
+import { FaPowerOff } from "react-icons/fa";
 
 import socketIO from "socket.io-client";
 
 import Cta from "../sound/Airport_Bell.mp3";
 import Bell from "../img/bell.png";
 import BellPlus from "../img/bellPlus.png";
-import Back from "../img/back.png";
-import Next from "../img/next.png";
 import axios from "axios";
+import ListAntrian from "./dashboard/ListAntrian";
+import Equalizer from "./dashboard/Equalizer";
+import StatsTotalAntrian from "./dashboard/StatsTotalAntrian";
 
 function Dashboard({ theme }) {
   const [isWave, setIsWave] = useState(false);
   const [isCall, setIsCall] = useState(false);
   const [listAntrean, setListAntrean] = useState([]);
-  const [selectAntrian, setSelectAntrian] = useState([]);
-  const [isBackActive, setIsBackActive] = useState(false);
-  const [backStep, setBackStep] = useState(0);
+  const [selectAntrian, setSelectAntrian] = useState({});
   const [pulseLabel, setPulseLabel] = useState(["Ready"]);
   const [admin, setAdmin] = useState([]);
   const [cardVisual, setCardVisual] = useState(true);
-  const [totalAntrian, setTotalAntrian] = useState([]);
-  const [task, setTask] = useState([]);
   const [callText, setCallText] = useState("");
   const [isCallText, setIsCallText] = useState(false);
 
   const socket = socketIO.connect(`${process.env.REACT_APP_BACKEND_URL}`);
   const [isConnected, setIsConnected] = useState(socket.connected);
+
+  const navigate = useNavigate();
 
   const playCTA = () => {
     setIsCallText(false);
@@ -99,131 +102,92 @@ function Dashboard({ theme }) {
     return petugas;
   };
 
-  const finishTask = async (antrianId) => {
-    const petugasId = await getPetugasId();
-    const token = getToken();
-
-    const payload = {
-      petugasId,
-    };
-
-    await axios.patch(
-      `${process.env.REACT_APP_BACKEND_URL}/tasks/${antrianId}`,
-      payload,
-      {
-        headers: { Authorization: `Bearer ${token.access_token}` },
-      }
+  const nextAntrian = async () => {
+    console.log(selectAntrian);
+    if (Object.keys(selectAntrian).length !== 0) {
+      await updateAntrian(selectAntrian.id, 4);
+    }
+    const newAntrian = await axios.get(
+      `${process.env.REACT_APP_BACKEND_URL}/antrian?group=${admin.group}&listAntrian=false&statusAntrian=1`
     );
 
-    setTask([]);
-    return "ok";
-  };
+    // setSelectAntrian(newAntrian.data[0]);
 
-  const createTask = async (group, counterId, antrianId) => {
-    const petugasId = await getPetugasId();
-    const token = getToken();
+    if (newAntrian.data.length < 1) {
+      alert("tidak ada antrian");
+      setSelectAntrian({});
+    } else {
+      await updateAntrian(newAntrian.data[0].id, 2).then((res) => {
+        setSelectAntrian(res.data);
+        // console.log(res);
+        const synth = window.speechSynthesis;
+        const strNoCounter = addSpace(admin.noCounter);
+        const strGroupCounter = admin.groupName;
+        // const counterId = admin.counterId;
+        // console.log(listAntrean[0].nomor);
+        const utterThis = new SpeechSynthesisUtterance(
+          `Nomor Urut ${res.data.group}${res.data.nomor}, silahkan ke counter ${strGroupCounter},  ${strNoCounter}`
+        );
+        utterThis.lang = "id-ID";
+        utterThis.rate = 0.8;
+        synth.speak(utterThis);
+        setPulseLabel("Next");
+        playAudioLoader();
 
-    console.log(petugasId);
-    const payload = {
-      group,
-      petugasId,
-      counterId,
-      antrianId,
-    };
+        utterThis.onend = (event) => {
+          setIsCall(false);
+          setIsWave(false);
+          setPulseLabel("Ready");
+        };
 
-    const newTask = await axios.post(
-      `${process.env.REACT_APP_BACKEND_URL}/tasks`,
-      payload,
-      {
-        headers: { Authorization: `Bearer ${token.access_token}` },
-      }
-    );
+        socket.emit("pingClient", {
+          msg: "ping from client",
+          socketID: socket.id,
+          id: res.data.id,
+          noAntrian: res.data.group + res.data.nomor,
+          groupCounter: strGroupCounter,
+          noCounter: admin.noCounter,
+        });
 
-    setTask(newTask);
-    return "ok";
-  };
+        socket.emit("changeStatus", {
+          msg: "change status",
+          id: res.data.id,
+          statusAntrian: 2,
+        });
+      });
+    }
 
-  const backAntrian = async (e) => {
-    e.preventDefault();
     const localAdmin = localStorage.getItem("login-counter");
-    const parseAdmin = await JSON.parse(localAdmin);
+    const parseAdmin = JSON.parse(localAdmin);
     setAdmin(parseAdmin);
     const lists = await axios.get(
-      `${process.env.REACT_APP_BACKEND_URL}/antrian?group=${parseAdmin.group}&isFinish=false&isSkip=true`
+      `${process.env.REACT_APP_BACKEND_URL}/antrian?group=${parseAdmin.group}&listAntrian=true&statusAntrian=3`
     );
-    // console.log(lists);
-    if (lists.data.length < 1) {
-      alert("Tidak ada antrian tertunda");
-    } else {
-      const res = await lists.data[backStep];
-
-      if (backStep < lists.data.length) {
-        const findExistId = listAntrean.filter(
-          (antrian) => antrian.id === res.id
-        );
-
-        if (findExistId) {
-          setBackStep(backStep + 1);
-        }
-        setListAntrean([res, ...listAntrean]);
-      }
-    }
+    setListAntrean(lists.data);
   };
 
-  useEffect(() => {
-    const findSkip = async () => {
-      const localAdmin = localStorage.getItem("login-counter");
-      const parseAdmin = await JSON.parse(localAdmin);
-      setAdmin(parseAdmin);
-      const lists = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/antrian?group=${parseAdmin.group}&isFinish=false&isSkip=true`
-      );
+  const updateAntrian = async (idAntrian, val) => {
+    const dataToken = localStorage.getItem("token-counter");
 
-      if (lists.data.length > 0) {
-        setIsBackActive(true);
+    const token = JSON.parse(dataToken);
+
+    const antrian = await axios.patch(
+      `${process.env.REACT_APP_BACKEND_URL}/antrian/${idAntrian}`,
+      {
+        statusAntrian: val,
+      },
+      {
+        headers: { Authorization: `Bearer ${token.access_token}` },
       }
-    };
-  }, []);
+    );
+    return antrian;
+  };
 
-  const nextAntrian = async () => {
-    const synth = window.speechSynthesis;
-    const strNoCounter = addSpace(admin.noCounter);
+  const recallAntrian = async (antrian) => {
     const strGroupCounter = admin.groupName;
-    const counterId = admin.counterId;
-    // console.log(listAntrean[0].nomor);
-    const utterThis = new SpeechSynthesisUtterance(
-      `Nomor Urut ${listAntrean[0].nomor}${listAntrean[0].group}, silahkan ke counter ${strGroupCounter},  ${strNoCounter}`
-    );
-    utterThis.lang = "id-ID";
-    utterThis.rate = 0.8;
-    synth.speak(utterThis);
-    setPulseLabel("Next");
-    playAudioLoader();
-
-    utterThis.onend = (event) => {
-      setIsCall(false);
-      setIsWave(false);
-      setPulseLabel("Ready");
-    };
-
-    socket.emit("pingClient", {
-      msg: "ping from client",
-      socketID: socket.id,
-      id: listAntrean[0].id,
-      noAntrian: listAntrean[0].nomor + listAntrean[0].group,
-      groupCounter: strGroupCounter,
-      noCounter: admin.noCounter,
-    });
-
-    await createTask(listAntrean[0].group, counterId, listAntrean[0].id);
-  };
-
-  const recallAntrian = async () => {
     const synth = window.speechSynthesis;
-    const getAntrian = await listAntrean[0].nomor;
-    console.log(getAntrian);
     const utterThis = new SpeechSynthesisUtterance(
-      `Perhatian untuk Nomor Urut ${getAntrian}!. Segera ke counter ${admin.noCounter}, apabila tidak hadir nomor antrian anda akan hangus!`
+      `Perhatian untuk Nomor Urut ${antrian.group} ${antrian.nomor}!. Segera ke counter ${admin.noCounter}`
     );
     utterThis.lang = "id-ID";
     utterThis.rate = 0.8;
@@ -236,61 +200,58 @@ function Dashboard({ theme }) {
       setIsWave(false);
       setPulseLabel("Ready");
     };
+    setSelectAntrian(antrian);
+    socket.emit("pingClient", {
+      msg: "ping from client",
+      socketID: socket.id,
+      id: antrian.id,
+      noAntrian: antrian.group + antrian.nomor,
+      groupCounter: strGroupCounter,
+      noCounter: admin.noCounter,
+    });
   };
 
   const addSpace = (str) => {
     return str.split("").join(", ");
   };
 
-  const getAdmin = async () => {
-    const localAdmin = localStorage.getItem("login-counter");
-    const parseAdmin = await JSON.parse(localAdmin);
-    setAdmin(parseAdmin);
+  // const getAdmin = async () => {
+  //   const localAdmin = localStorage.getItem("login-counter");
+  //   const parseAdmin = await JSON.parse(localAdmin);
+  //   setAdmin(parseAdmin);
+  // };
+
+  const logout = () => {
+    localStorage.setItem("my-profile", null);
+    localStorage.setItem("token-counter", null);
+    localStorage.setItem("login-counter", null);
+
+    navigate("/login");
   };
 
-  const antrianFinish = async () => {
-    const dataToken = localStorage.getItem("token-counter");
+  const antrianFinish = async (antrian) => {
+    await updateAntrian(antrian.id, 4);
 
-    const token = JSON.parse(dataToken);
+    socket.emit("changeStatus", {
+      msg: "change status",
+      id: antrian.id,
+      statusAntrian: 4,
+    });
 
-    const antrianId = listAntrean[0].id;
-
-    const antrian = await axios.patch(
-      `${process.env.REACT_APP_BACKEND_URL}/antrian/${antrianId}`,
-      {
-        headers: { Authorization: `Bearer ${token.access_token}` },
-      }
-    );
-
-    if (antrian) {
-      await finishTask(antrianId);
-      listAntrean.shift();
-    } else {
-      alert("something wrong with server");
-    }
+    setSelectAntrian({});
   };
 
   const antrianSkip = async () => {
-    const dataToken = localStorage.getItem("token-counter");
+    console.log(selectAntrian.id);
+    await updateAntrian(selectAntrian.id, 3).then((res) => {
+      socket.emit("changeStatus", {
+        msg: "change status",
+        id: res.data.id,
+        statusAntrian: 3,
+      });
 
-    const token = JSON.parse(dataToken);
-
-    const antrianId = listAntrean[0].id;
-
-    const antrian = await axios.patch(
-      `${process.env.REACT_APP_BACKEND_URL}/antrian/skip/${antrianId}`,
-
-      {
-        headers: { Authorization: `Bearer ${token.access_token}` },
-      }
-    );
-
-    if (antrian) {
-      await finishTask(antrianId);
-      listAntrean.shift();
-    } else {
-      alert("something wrong with server");
-    }
+      setSelectAntrian({});
+    });
   };
 
   useEffect(() => {
@@ -299,24 +260,23 @@ function Dashboard({ theme }) {
       const parseAdmin = await JSON.parse(localAdmin);
       setAdmin(parseAdmin);
       const lists = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/antrian?group=${parseAdmin.group}&isFinish=false&isSkip=false`
+        `${process.env.REACT_APP_BACKEND_URL}/antrian?group=${parseAdmin.group}&listAntrian=true&statusAntrian=3`
       );
       setListAntrean(lists.data);
-      setSelectAntrian(lists.data[0]);
-    };
-
-    const getTotalAntrian = async () => {
-      const menus = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/menus`
-      );
-      setTotalAntrian(menus.data);
     };
     getListAntrean();
-    getTotalAntrian();
 
     socket.on("connect", () => {
       setIsConnected(true);
       console.log("connect");
+    });
+
+    socket.on("statusAntrian", ({ data }) => {
+      getListAntrean();
+    });
+
+    socket.on("newAntrian", ({ data }) => {
+      getListAntrean();
     });
 
     socket.on("disconnect", () => {
@@ -326,34 +286,35 @@ function Dashboard({ theme }) {
   }, []);
 
   return (
-    <div className="w-full md:w-[65%] lg:w-[45%] h-screen flex flex-col items-center justify-center gap-5">
-      <div className="w-full h-[45rem] bg-[#edf4fe] flex flex-col gap-4 justify-center">
+    <div className="w-full md:w-[85%] lg:w-[65%] h-screen flex flex-row justify-center gap-5 mt-32">
+      <div className="w-full h-[50rem] relative rounded-md  bg-blue-100 flex flex-col gap-2 justify-center">
+        <div
+          className="absolute top-2 left-2 p-3 bg-slate-50 rounded-lg cursor-pointer"
+          onClick={() => logout()}
+        >
+          <FaPowerOff className="text-2xl text-red-600 font-bold" />
+        </div>
+
         <h1 className="text-4xl font-bold text-center">SYSTEM ANTRIAN</h1>
         <div className="flex flex-row w-full px-16 gap-4 mt-4">
           <div
             className={`w-[50%] h-[15rem] ${theme.secondary} border-4 border-white rounded-md flex flex-col items-center justify-center`}
           >
-            {listAntrean.length > 0 &&
-              (isCall ? (
-                <motion.h1
-                  initial={{ opacity: 0.2, scale: 1 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{
-                    duration: 0.8,
-                    delay: 0.5,
-                    repeat: 5,
-                  }}
-                  className={`text-8xl font-bold ${theme.textprimary}`}
-                >
-                  {listAntrean[0].nomor}
-                  {listAntrean[0].group}
-                </motion.h1>
-              ) : (
-                <h1 className={`text-8xl font-bold ${theme.textprimary}`}>
-                  {listAntrean[0].nomor}
-                  {listAntrean[0].group}
-                </h1>
-              ))}
+            {selectAntrian !== [] && (
+              <motion.h1
+                initial={{ opacity: 0.2, scale: 1 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  duration: 0.8,
+                  delay: 0.5,
+                  repeat: 5,
+                }}
+                className={`text-8xl font-bold ${theme.textprimary}`}
+              >
+                {selectAntrian.group}
+                {selectAntrian.nomor}
+              </motion.h1>
+            )}
           </div>
           <div
             className={`w-[50%] h-[15rem] ${theme.secondary} border-4 border-white rounded-md flex flex-col items-center justify-center`}
@@ -372,24 +333,11 @@ function Dashboard({ theme }) {
                 onClick={antrianSkip}
                 className={`"w-full ${
                   isWave === false ? "bg-red-700" : "bg-[#D1D4DB]"
-                } py-4 tracking-wide text-2xl font-bold text-gray-100 rounded-md border-4 border-white
+                } py-2 tracking-wide text-2xl font-bold text-gray-100 rounded-md
               ${isWave === false ? "hover:bg-red-500" : "hover:bg-[#D1D4DB]"}
                 `}
               >
-                SKIP
-              </motion.button>
-
-              <motion.button
-                whileTap={isWave === false ? { scale: 0.9 } : { scale: 1 }}
-                disabled={isWave}
-                onClick={antrianFinish}
-                className={`"w-full ${
-                  isWave === false ? "bg-[#009F3C]" : "bg-[#D1D4DB]"
-                } py-4 tracking-wide text-2xl font-bold text-gray-100 rounded-md border-4 border-white
-              ${isWave === false ? "hover:bg-green-500" : "hover:bg-[#D1D4DB]"}
-                `}
-              >
-                FINISH
+                <h1 className="text-3xl font-semibold text-gray-100">Skip</h1>
               </motion.button>
             </div>
 
@@ -401,43 +349,30 @@ function Dashboard({ theme }) {
                 disabled={isWave}
                 className={`${
                   isWave === false ? theme.primary : "bg-[#D1D4DB]"
-                } w-full flex flex-col items-center justify-center py-4 rounded-md ${
+                } w-full flex flex-row items-center justify-center gap-3 py-2 rounded-md ${
                   isWave === false
                     ? theme.hoverBgSecondary
                     : "hover:bg-[#D1D4DB]"
                 }`}
               >
-                <img src={Bell} alt="" />
-                <h1 className="text-3xl font-semibold text-gray-100">Call</h1>
-              </motion.button>
-              <motion.button
-                whileTap={isWave === false ? { scale: 0.9 } : { scale: 1 }}
-                disabled={isWave}
-                onClick={recallAntrian}
-                className={`${
-                  isWave === false ? theme.primary : "bg-[#D1D4DB]"
-                } w-full flex flex-col items-center justify-center py-4 rounded-md ${
-                  isWave === false
-                    ? theme.hoverBgSecondary
-                    : "hover:bg-[#D1D4DB]"
-                }`}
-              >
-                <img src={BellPlus} alt="" />
-                <h1 className="text-3xl font-semibold text-gray-100">Recall</h1>
+                <BiMessageDots className="text-slate-50 text-4xl" />
+                <h1 className="text-3xl font-semibold text-gray-100">
+                  Custom Call
+                </h1>
               </motion.button>
             </div>
 
             <div className="w-full flex flex-row justify-between gap-4">
               <motion.button
                 whileTap={isWave === false ? { scale: 0.9 } : { scale: 1 }}
-                disabled={isWave && isBackActive}
-                onClick={backAntrian}
+                disabled={isWave}
+                onClick={recallAntrian}
                 className={`bg-[#D1D4DB] w-full flex flex-col items-center justify-center py-4 rounded-md ${
                   isWave === false ? "hover:bg-gray-400" : "hover:bg-[#D1D4DB]"
                 }`}
               >
-                <img src={Back} alt="" />
-                <h1 className="text-3xl font-semibold text-gray-100">Back</h1>
+                <img src={BellPlus} alt="" />
+                <h1 className="text-3xl font-semibold text-gray-100">Recall</h1>
               </motion.button>
               <motion.button
                 whileTap={isWave === false ? { scale: 0.9 } : { scale: 1 }}
@@ -447,8 +382,8 @@ function Dashboard({ theme }) {
                   isWave === false ? "hover:bg-gray-400" : "hover:bg-[#D1D4DB]"
                 }`}
               >
-                <img src={Next} alt="" />
-                <h1 className="text-3xl font-semibold text-gray-100">Next</h1>
+                <img src={Bell} alt="" />
+                <h1 className="text-3xl font-semibold text-gray-100">Call</h1>
               </motion.button>
             </div>
           </div>
@@ -472,18 +407,7 @@ function Dashboard({ theme }) {
             {cardVisual ? (
               <div className="w-full h-full flex flex-col justify-center items-center">
                 {isWave ? (
-                  <>
-                    <Audio
-                      height="100"
-                      width="100"
-                      color={theme.bgAudioLoader}
-                      ariaLabel="audio-loading"
-                      wrapperStyle={{}}
-                      wrapperClass="wrapper-class"
-                      visible={true}
-                    />
-                    <p>{pulseLabel}</p>
-                  </>
+                  <Equalizer theme={theme} pulseLabel={pulseLabel} />
                 ) : (
                   <p className={`${theme.textprimary} font-semibold`}>
                     {pulseLabel}
@@ -491,37 +415,19 @@ function Dashboard({ theme }) {
                 )}
               </div>
             ) : (
-              <div className="px-6 py-4 m-0 w-full h-full flex flex-col">
-                <div className="flex flex-row justify-between gap-3 mb-3">
-                  <h1
-                    className={`text-2xl font-semibold ${theme.textprimary} ml-2`}
-                  >
-                    Layanan
-                  </h1>
-                  <h1
-                    className={`text-2xl font-semibold ${theme.textprimary} ml-2`}
-                  >
-                    Jumlah Antrian
-                  </h1>
-                </div>
-                {totalAntrian.length > 0 &&
-                  totalAntrian.map((total) => (
-                    <div
-                      className={`flex flex-row justify-between items-center my-1 ${theme.secondary} pl-2 py-2`}
-                    >
-                      <h3 className={`w-full ${theme.textprimary}`}>
-                        {total.label}
-                      </h3>
-                      <h3 className={`text-center w-full ${theme.textprimary}`}>
-                        {total.jumlahAntrian}
-                      </h3>
-                    </div>
-                  ))}
-              </div>
+              <StatsTotalAntrian theme={theme} />
             )}
           </div>
         </div>
       </div>
+
+      <ListAntrian
+        lists={listAntrean}
+        admin={admin}
+        theme={theme}
+        recallAntrian={recallAntrian}
+        antrianFinish={antrianFinish}
+      />
 
       {/* modal calltext */}
       {isCallText && (

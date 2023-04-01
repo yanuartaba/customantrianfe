@@ -6,7 +6,13 @@ import axios from "axios";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 
+import socketIO from "socket.io-client";
+
 const Menu = (props) => {
+  const socket = socketIO.connect(`${process.env.REACT_APP_BACKEND_URL}`);
+
+  const [isConnected, setIsConnected] = useState(socket.connected);
+  const [socketId, setSocketId] = useState("");
   pdfMake.vfs = pdfFonts.pdfMake.vfs;
   const [showTooltip, setShowTooltip] = useState(false);
   const { label, image, urlParam, description, codeGroup } = props.menu;
@@ -92,6 +98,11 @@ const Menu = (props) => {
     pdfMake.createPdf(docDefinition).print({}, win);
     setTimeout(() => {
       win.close();
+
+      socket.emit("newAntrian", {
+        msg: "new antrian",
+        isNew: true,
+      });
     }, 500);
   };
 
@@ -104,6 +115,17 @@ const Menu = (props) => {
       day: "numeric",
     };
     setDate(date.toLocaleDateString("id-ID", options));
+
+    socket.on("connect", () => {
+      console.log("connect");
+      setIsConnected(true);
+      setSocketId(socket.id);
+    });
+
+    socket.on("disconnect", () => {
+      setIsConnected(false);
+      console.log("disconnect");
+    });
   }, [props]);
 
   return (

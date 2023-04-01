@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Marquee from "react-fast-marquee";
-import PromotionVideo from "../video/share.mp4";
-import { activeCounter } from "../utils/data";
 import axios from "axios";
 
 import socketIO from "socket.io-client";
 import { useEffect } from "react";
-import Preview from "./admin/setting/Preview";
 import ScreenBanner from "./ScreenBanner";
 
 function Screen({ theme }) {

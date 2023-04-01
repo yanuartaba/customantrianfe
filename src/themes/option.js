@@ -28,6 +28,7 @@ export const applyTheme = (theme) => {
         hoverPrimary: "hover:bg-red-600 hover:text-red-100",
         hoverSecondary: "hover:bg-red-100 hover:text-red-600",
         bgAudioLoader: "#dc2626",
+        bgAudioLoaderSecondary: "#bfdbfe",
       };
     case "SUNSHINE":
       // eslint-disable-next-line no-unused-expressions
@@ -42,6 +43,7 @@ export const applyTheme = (theme) => {
         hoverPrimary: "hover:bg-orange-600 hover:text-orange-100",
         hoverSecondary: "hover:bg-orange-100 hover:text-orange-600",
         bgAudioLoader: "#ea580c",
+        bgAudioLoaderSecondary: "#bfdbfe",
       };
     default:
       // eslint-disable-next-line no-unused-expressions
@@ -56,6 +58,7 @@ export const applyTheme = (theme) => {
         hoverPrimary: "hover:bg-blue-600 hover:text-blue-100",
         hoverSecondary: "hover:bg-blue-100 hover:text-blue-600",
         bgAudioLoader: "#2563eb",
+        bgAudioLoaderSecondary: "#bfdbfe",
       };
   }
 };
