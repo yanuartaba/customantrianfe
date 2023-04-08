@@ -175,10 +175,10 @@ function LoginCounter({ logoHeader }) {
         </div>
         <div className="w-full h-full col-span-4 flex justify-center items-center">
           <div className="w-full h-[80vh] flex flex-col items-center justify-evenly">
-            <div className="flex flex-col gap-2 text-center">
+            <div className="flex flex-col gap-1 text-center">
               <div className="flex justify-center">
                 <img
-                  className="h-[100%] w-auto"
+                  className="h-[5rem] w-auto"
                   src={`${process.env.REACT_APP_BACKEND_URL}/files/${logoHeader}`}
                   alt=""
                 />
