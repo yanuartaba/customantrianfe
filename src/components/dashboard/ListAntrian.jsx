@@ -19,7 +19,7 @@ function ListAntrian({ lists, admin, theme, recallAntrian, antrianFinish }) {
 
   return (
     <>
-      <div className="bg-blue-100 rounded-md relative w-[22rem] h-[50rem] overflow-y-auto overflow-x-hidden flex flex-col justify-start">
+      <div className="bg-blue-100 rounded-md relative w-[22rem] h-[35rem] overflow-y-auto overflow-x-hidden flex flex-col justify-start">
         <div
           className={`w-full sticky top-0 z-10 rounded-tl-md rounded-tr-md ${theme.primary} text-center py-3`}
         >

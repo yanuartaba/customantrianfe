@@ -17,7 +17,7 @@ function CardMedia({ props, theme }) {
             className={`w-auto h-auto flex flex-col justify-center items-center border-solid border-2 ${theme.secondary} rounded-md`}
           >
             <img
-              className="p-4"
+              className=""
               src={`${process.env.REACT_APP_BACKEND_URL}/files/${url}`}
               alt=""
             />

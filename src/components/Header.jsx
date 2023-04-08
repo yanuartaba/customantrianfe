@@ -44,10 +44,10 @@ function Header({ text, logoHeader }) {
   }, []);
   return (
     <div className="w-full bg-white dshadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)] relative top-0">
-      <div className="fixed top-0 w-full z-10 flex justify-between px-10 py-4">
+      <div className="fixed top-0 w-full z-10 flex justify-between px-10">
         <div className="flex items-center gap-3">
           <img
-            className="h-[50px] w-auto"
+            className="h-[60%] w-auto"
             src={`${process.env.REACT_APP_BACKEND_URL}/files/${logoHeader}`}
             alt=""
           />

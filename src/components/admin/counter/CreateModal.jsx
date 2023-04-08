@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { VscError } from "react-icons/vsc";
 
 function CreateModal(props) {
   const [noCounter, setNoCounter] = useState("");
   const [group, setGroup] = useState("");
   const [menus, setMenus] = useState([]);
   const [canSave, setCanSave] = useState(false);
+  const [errors, setErrors] = useState("");
   const navigate = useNavigate();
   console.log(menus);
   const createCounter = async () => {
@@ -33,6 +36,7 @@ function CreateModal(props) {
       navigate(0);
     } catch (error) {
       console.log(error);
+      setErrors(error.response.data.message);
     }
   };
 
@@ -90,7 +94,41 @@ function CreateModal(props) {
                 </svg>
                 <span class="sr-only">Close modal</span>
               </button>
+
               <h3 className="px-6 pt-6 mt-12">Tambah Baru</h3>
+
+              <div className="px-4 mt-3">
+                {errors.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.6 }}
+                    exit={{ opacity: 1 }}
+                    transition={{ duration: 1 }}
+                    className="flex flex-col gap-1 w-full bg-red-200 rounded-md border-red-600 border-2 px-2 py-2"
+                  >
+                    <div className="flex flex-row justify-start gap-3 items-center">
+                      <VscError className="text-2xl font-semibold text-red-600" />
+                      <h1 className="text-xl font-semibold text-red-600">
+                        Error
+                      </h1>
+                    </div>
+
+                    {errors.length > 0 && (
+                      <ul>
+                        {" "}
+                        {Array.isArray(errors) ? (
+                          errors.map((error) => (
+                            <li className="text-red-600">{error}</li>
+                          ))
+                        ) : (
+                          <li className="text-red-600">{errors}</li>
+                        )}
+                      </ul>
+                    )}
+                  </motion.div>
+                )}
+              </div>
+
               <div className="flex flex-col gap-4 p-6">
                 <div className="flex flex-col">
                   <label>No Counter</label>
@@ -113,7 +151,9 @@ function CreateModal(props) {
                                 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:bg-white
                                 "
                   >
-                    <option disabled>Pilih salah satu</option>
+                    <option disabled selected value={""}>
+                      Pilih salah satu
+                    </option>
                     {menus &&
                       menus.map((menu) => (
                         <option key={menu.id} value={menu.codeGroup}>

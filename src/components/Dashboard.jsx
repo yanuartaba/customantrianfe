@@ -103,7 +103,6 @@ function Dashboard({ theme }) {
   };
 
   const nextAntrian = async () => {
-    console.log(selectAntrian);
     if (Object.keys(selectAntrian).length !== 0) {
       await updateAntrian(selectAntrian.id, 4);
     }
@@ -286,19 +285,19 @@ function Dashboard({ theme }) {
   }, []);
 
   return (
-    <div className="w-full md:w-[85%] lg:w-[65%] h-screen flex flex-row justify-center gap-5 mt-32">
-      <div className="w-full h-[50rem] relative rounded-md  bg-blue-100 flex flex-col gap-2 justify-center">
+    <div className="w-full md:w-[85%] lg:w-[65%] h-screen flex flex-row justify-center gap-5 mt-20">
+      <div className="w-full h-[35rem] relative rounded-md  bg-blue-100 flex flex-col gap-2 justify-center">
         <div
           className="absolute top-2 left-2 p-3 bg-slate-50 rounded-lg cursor-pointer"
           onClick={() => logout()}
         >
-          <FaPowerOff className="text-2xl text-red-600 font-bold" />
+          <FaPowerOff className="text-md text-red-600 font-bold" />
         </div>
 
-        <h1 className="text-4xl font-bold text-center">SYSTEM ANTRIAN</h1>
-        <div className="flex flex-row w-full px-16 gap-4 mt-4">
+        <h1 className="text-3xl font-bold text-center">LOKET ANTRIAN</h1>
+        <div className="flex flex-row w-full px-16 gap-2 mt-4">
           <div
-            className={`w-[50%] h-[15rem] ${theme.secondary} border-4 border-white rounded-md flex flex-col items-center justify-center`}
+            className={`w-[50%] h-[12rem] ${theme.secondary} border-4 border-white rounded-md flex flex-col items-center justify-center`}
           >
             {selectAntrian !== [] && (
               <motion.h1
@@ -309,7 +308,7 @@ function Dashboard({ theme }) {
                   delay: 0.5,
                   repeat: 5,
                 }}
-                className={`text-8xl font-bold ${theme.textprimary}`}
+                className={`text-6xl font-bold ${theme.textprimary}`}
               >
                 {selectAntrian.group}
                 {selectAntrian.nomor}
@@ -317,15 +316,15 @@ function Dashboard({ theme }) {
             )}
           </div>
           <div
-            className={`w-[50%] h-[15rem] ${theme.secondary} border-4 border-white rounded-md flex flex-col items-center justify-center`}
+            className={`w-[50%] h-[12rem] ${theme.secondary} border-4 border-white rounded-md flex flex-col items-center justify-center`}
           >
-            <h1 className={`text-4xl ${theme.textprimary}`}>
+            <h1 className={`text-3xl font-semibold ${theme.textprimary}`}>
               {admin.groupName} : {admin.noCounter}
             </h1>
           </div>
         </div>
-        <div className="flex flex-row w-full px-16 gap-4 mt-4">
-          <div className="w-[50%] flex flex-col gap-4">
+        <div className="flex flex-row w-full px-16 gap-2 mt-4">
+          <div className="w-[50%] flex flex-col gap-2">
             <div className="flex flex-col gap-1">
               <motion.button
                 whileTap={isWave === false ? { scale: 0.9 } : { scale: 1 }}
@@ -337,7 +336,7 @@ function Dashboard({ theme }) {
               ${isWave === false ? "hover:bg-red-500" : "hover:bg-[#D1D4DB]"}
                 `}
               >
-                <h1 className="text-3xl font-semibold text-gray-100">Skip</h1>
+                <h1 className="text-xl font-semibold text-gray-100">Skip</h1>
               </motion.button>
             </div>
 
@@ -355,8 +354,8 @@ function Dashboard({ theme }) {
                     : "hover:bg-[#D1D4DB]"
                 }`}
               >
-                <BiMessageDots className="text-slate-50 text-4xl" />
-                <h1 className="text-3xl font-semibold text-gray-100">
+                <BiMessageDots className="text-slate-50 text-xl" />
+                <h1 className="text-xl font-semibold text-gray-100">
                   Custom Call
                 </h1>
               </motion.button>
@@ -364,15 +363,21 @@ function Dashboard({ theme }) {
 
             <div className="w-full flex flex-row justify-between gap-4">
               <motion.button
-                whileTap={isWave === false ? { scale: 0.9 } : { scale: 1 }}
-                disabled={isWave}
-                onClick={recallAntrian}
+                whileTap={
+                  isWave === false && Object.keys(selectAntrian).length > 0
+                    ? { scale: 0.9 }
+                    : { scale: 1 }
+                }
+                disabled={isWave || Object.keys(selectAntrian).length < 1}
+                onClick={() => recallAntrian(selectAntrian)}
                 className={`bg-[#D1D4DB] w-full flex flex-col items-center justify-center py-4 rounded-md ${
-                  isWave === false ? "hover:bg-gray-400" : "hover:bg-[#D1D4DB]"
+                  isWave === false && Object.keys(selectAntrian).length > 0
+                    ? "hover:bg-gray-400"
+                    : "hover:bg-[#D1D4DB]"
                 }`}
               >
                 <img src={BellPlus} alt="" />
-                <h1 className="text-3xl font-semibold text-gray-100">Recall</h1>
+                <h1 className="text-xl font-semibold text-gray-100">Recall</h1>
               </motion.button>
               <motion.button
                 whileTap={isWave === false ? { scale: 0.9 } : { scale: 1 }}
@@ -383,14 +388,13 @@ function Dashboard({ theme }) {
                 }`}
               >
                 <img src={Bell} alt="" />
-                <h1 className="text-3xl font-semibold text-gray-100">Call</h1>
+                <h1 className="text-xl font-semibold text-gray-100">Call</h1>
               </motion.button>
             </div>
           </div>
-          <div className="w-[50%] bg-white flex flex-col border-1 border-b-slate-600">
+          <div className="w-[50%] bg-white flex flex-col border-1 border-b-slate-600 rounded-t-lg">
             <div
-              className={`${theme.primary} w-full py-5 tracking-wide font-bold text-gray-100 
-                            flex flex-row justify-between items-center px-2`}
+              className={`${theme.primary} w-full py-2 tracking-wide font-bold text-gray-100 flex flex-row justify-between items-center px-2 rounded-t-lg`}
             >
               <IoCaretBackCircleSharp
                 onClick={() => setCardVisual(!cardVisual)}
@@ -415,7 +419,9 @@ function Dashboard({ theme }) {
                 )}
               </div>
             ) : (
-              <StatsTotalAntrian theme={theme} />
+              <div className="w-full h-[10rem] overflow-y-auto">
+                <StatsTotalAntrian theme={theme} />
+              </div>
             )}
           </div>
         </div>

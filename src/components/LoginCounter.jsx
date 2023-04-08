@@ -2,15 +2,13 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Ilustrasi1 from "../img/illustrator1.png";
 import Bg1 from "../img/bg1.png";
-// import CS1 from "../img/cs1.png";
-// import { dataMenu } from "../utils/data";
-import { CiHospital1 } from "react-icons/ci";
 import { VscError } from "react-icons/vsc";
 import axios from "axios";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
+import { Oval } from "react-loader-spinner";
 
-function LoginCounter() {
+function LoginCounter({ logoHeader }) {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,9 +16,7 @@ function LoginCounter() {
   const [counters, setCounters] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [errors, setErrors] = useState([]);
-  // const [name, setName] = useState("");
-  // const [noCounter, setNoCounter] = useState("");
-  // const [group, setGroup] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const getListCounter = async () => {
     const listCounter = await axios.get(
@@ -33,29 +29,12 @@ function LoginCounter() {
 
   // const clearError = () => {};
 
-  useEffect(() => {
-    getListCounter();
-    if (errors.length > 0) {
-      setTimeout(() => {
-        setErrors([]);
-      }, 5000);
-    }
-  }, [errors]);
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
-    const dataLogin = {
-      email,
-      password,
-    };
-
+  const handleAdmin = async (email, password) => {
     try {
       const token = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/auth/signin`,
-        dataLogin
+        { email, password }
       );
-      localStorage.setItem("token-counter", JSON.stringify(token.data));
       const accessToken = token.data.access_token;
       const myProfile = await axios.get(
         `${process.env.REACT_APP_BACKEND_URL}/users/me`,
@@ -63,33 +42,128 @@ function LoginCounter() {
           headers: { Authorization: `Bearer ${accessToken}` },
         }
       );
-      localStorage.setItem("my-profile", JSON.stringify(myProfile.data));
 
-      if (!isAdmin) {
-        const dataCounter = JSON.parse(counter);
-        const dataGroup = {
-          counterId: dataCounter.id,
-          noCounter: dataCounter.nomorCounter,
-          group: dataCounter.group,
-          groupName: dataCounter.menu.label,
-        };
-        localStorage.setItem("login-counter", JSON.stringify(dataGroup));
-        navigate("/dashboard");
+      if (myProfile.data.isAdmin !== true) {
+        navigate("/login");
+        if (myProfile.data.isAdmin !== true && isAdmin) {
+          setErrors("You dont have authorize to access it");
+        }
       } else {
         navigate("/admin/home");
+        localStorage.setItem("token-counter", JSON.stringify(token.data));
+        localStorage.setItem("my-profile", JSON.stringify(myProfile.data));
       }
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
       setErrors(error.response.data.message);
     }
   };
 
+  const handlePetugas = async (email, password) => {
+    try {
+      const token = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/auth/signin`,
+        { email, password }
+      );
+      const accessToken = token.data.access_token;
+      const myProfile = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/users/me`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+
+      localStorage.setItem("token-counter", JSON.stringify(token.data));
+      localStorage.setItem("my-profile", JSON.stringify(myProfile.data));
+
+      const dataCounter = JSON.parse(counter);
+      const dataGroup = {
+        counterId: dataCounter.id,
+        noCounter: dataCounter.nomorCounter,
+        group: dataCounter.group,
+        groupName: dataCounter.menu.label,
+      };
+      localStorage.setItem("login-counter", JSON.stringify(dataGroup));
+      setIsLoading(false);
+      navigate("/dashboard");
+    } catch (error) {
+      console.log(error);
+      setErrors(error.response.data.message);
+    }
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    // const dataLogin = {
+    //   email,
+    //   password,
+    // };
+    setIsLoading(true);
+    try {
+      if (isAdmin) {
+        await handleAdmin(email, password);
+      } else {
+        await handlePetugas(email, password);
+      }
+      // const token = await axios.post(
+      //   `${process.env.REACT_APP_BACKEND_URL}/auth/signin`,
+      //   dataLogin
+      // );
+      // localStorage.setItem("token-counter", JSON.stringify(token.data));
+      // const accessToken = token.data.access_token;
+      // const myProfile = await axios.get(
+      //   `${process.env.REACT_APP_BACKEND_URL}/users/me`,
+      //   {
+      //     headers: { Authorization: `Bearer ${accessToken}` },
+      //   }
+      // );
+      // localStorage.setItem("my-profile", JSON.stringify(myProfile.data));
+      // if (myProfile.data.isAdmin !== true && isAdmin) {
+      //   setErrors("You dont have authorize to access it");
+      // }
+      // if (!isAdmin) {
+      //   const dataCounter = JSON.parse(counter);
+      //   const dataGroup = {
+      //     counterId: dataCounter.id,
+      //     noCounter: dataCounter.nomorCounter,
+      //     group: dataCounter.group,
+      //     groupName: dataCounter.menu.label,
+      //   };
+      //   localStorage.setItem("login-counter", JSON.stringify(dataGroup));
+      //   navigate("/dashboard");
+      // } else {
+      //   // if (myProfile.data.isAdmin !== true) {
+      //   //   setErrors("You dont have authorize to access it");
+      //   // } else {
+      //   //
+      //   // }
+      //   navigate("/admin/home");
+      // }
+      // setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setErrors(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    getListCounter();
+    if (errors.length > 0) {
+      setTimeout(() => {
+        setErrors([]);
+        setIsLoading(false);
+      }, 5000);
+    }
+  }, [errors]);
+
   return (
     <>
-      <div className="grid grid-cols-8 gap-4 w-full h-[100vh] overflow-hidden">
-        <div className="w-full h-full flex flex-col items-center justify-center relative col-span-3">
+      <div className="grid grid-cols-custom8 gap-4 w-full h-[100vh] overflow-hidden">
+        <div className="w-full h-full flex flex-col items-center justify-center relative col-span-4">
           <img src={Bg1} className="absolute left-0 min-h-[100vh]" alt="" />
-          <img src={Ilustrasi1} className="z-10" alt="" />
+          <img src={Ilustrasi1} className="z-10 w-[50%] mt-10" alt="" />
           <div className="px-6 py-5 z-10 mt-5">
             <h1 className="text-3xl text-gray-200 font-semibold px-16">
               Beberapa klik lagi untuk masuk ke Dashboard Anda.
@@ -99,14 +173,18 @@ function LoginCounter() {
             </p>
           </div>
         </div>
-        <div className="w-full h-full col-span-5 flex justify-center items-center">
-          <div className="w-[60%] h-[70vh] flex flex-col items-center justify-evenly">
+        <div className="w-full h-full col-span-4 flex justify-center items-center">
+          <div className="w-full h-[80vh] flex flex-col items-center justify-evenly">
             <div className="flex flex-col gap-2 text-center">
               <div className="flex justify-center">
-                <CiHospital1 className="text-7xl font-bold text-center" />
+                <img
+                  className="h-[100%] w-auto"
+                  src={`${process.env.REACT_APP_BACKEND_URL}/files/${logoHeader}`}
+                  alt=""
+                />
               </div>
               <h1 className="text-2xl font-semibold">Selamat Datang di</h1>
-              <h1 className="text-6xl font-bold">System Antrian</h1>
+              <h1 className="text-4xl font-bold">Loket Antrian</h1>
               <h1 className="text-2xl font-semibold">
                 Satu aplikasi untuk segala kebutuhanmu{" "}
               </h1>
@@ -139,7 +217,7 @@ function LoginCounter() {
               </motion.div>
             )}
 
-            <div className="flex flex-col w-[60%] gap-4">
+            <div className="flex flex-col w-[60%] gap-2 mt-4">
               <div>
                 <label className="block">
                   <span className="block text-md font-medium text-slate-700">
@@ -182,25 +260,24 @@ function LoginCounter() {
                     <span className="block text-md font-medium text-slate-700">
                       Counter
                     </span>
-
-                    <select
-                      onChange={(e) => setCounter(e.target.value)}
-                      className="mt-1 block w-full px-3 py-2 bg-[#EDF3FE] border border-slate-300 rounded-md text-sm shadow-sm placeholder-gray-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:bg-white"
-                    >
-                      <option value="#" disabled selected>
-                        Pilih salah satu
-                      </option>
-                      {counters.length > 0 &&
-                        counters.map((counter) => (
-                          <option
-                            key={counter.id}
-                            value={JSON.stringify(counter)}
-                          >
-                            {counter.menu.label} : {counter.nomorCounter}
-                          </option>
-                        ))}
-                    </select>
                   </label>
+                  <select
+                    onChange={(e) => setCounter(e.target.value)}
+                    className="mt-1 block w-full px-3 py-2 bg-[#EDF3FE] border border-slate-300 rounded-md text-sm shadow-sm placeholder-gray-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:bg-white"
+                  >
+                    <option disabled selected value={""}>
+                      Pilih salah satu
+                    </option>
+                    {counters &&
+                      counters.map((counter) => (
+                        <option
+                          key={counter.id}
+                          value={JSON.stringify(counter)}
+                        >
+                          {counter.menu.label} : {counter.nomorCounter}
+                        </option>
+                      ))}
+                  </select>
                 </div>
               )}
 
@@ -218,7 +295,24 @@ function LoginCounter() {
                 onClick={handleLogin}
                 className="w-full bg-blue-500 text-gray-100 rounded-md py-4 text-xl font-bold tracking-wide mt-4"
               >
-                Masuk
+                {isLoading === true ? (
+                  <div className="w-full flex justify-center">
+                    <Oval
+                      height={30}
+                      width={30}
+                      color="#1c5ddc"
+                      wrapperStyle={{}}
+                      wrapperClass=""
+                      visible={true}
+                      ariaLabel="oval-loading"
+                      secondaryColor="#deeafe"
+                      strokeWidth={4}
+                      strokeWidthSecondary={4}
+                    />
+                  </div>
+                ) : (
+                  <p>Masuk</p>
+                )}
               </button>
             </div>
           </div>

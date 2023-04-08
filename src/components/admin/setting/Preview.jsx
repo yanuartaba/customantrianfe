@@ -44,8 +44,8 @@ function Preview({ media, width, height }) {
             <YouTube
               videoId={url}
               opts={{
-                width: "725",
-                height: "450",
+                width: "490",
+                height: "275",
                 playerVars: {
                   autoplay: 0,
                   controls: 1,

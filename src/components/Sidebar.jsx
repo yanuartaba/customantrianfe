@@ -59,13 +59,13 @@ function Sidebar({ theme }) {
 
       <aside
         id="sidebar-multi-level-sidebar"
-        className="fixed top-0 left-0 z-40 w-64 pt-[5.1rem] h-screen transition-transform -translate-x-full sm:translate-x-0"
+        className="fixed top-0 left-0 z-40 w-64 pt-[3.2rem] h-screen transition-transform -translate-x-full sm:translate-x-0"
         aria-label="Sidebar"
       >
         <div
           className={`h-full px-3 py-10 overflow-y-auto ${theme.primary} dark:bg-gray-800`}
         >
-          <ul className="space-y-4">
+          <ul className="space-y-1">
             <li>
               <NavLink
                 to="/admin/home"
@@ -123,7 +123,10 @@ function Sidebar({ theme }) {
             </li>
             <li>
               <button
-                onClick={() => setIsSetting(!isSetting)}
+                onClick={() => {
+                  setIsSetting(!isSetting);
+                  setIsProfileLink(false);
+                }}
                 className="flex flex-row w-full items-center p-2 text-base font-normal text-gray-50 hover:text-gray-800 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 <MdSettings />
@@ -230,15 +233,23 @@ function Sidebar({ theme }) {
             <div
               // onMouseEnter={() => setIsProfileLink(true)}
               // onMouseLeave={() => setIsProfileLink(false)}
-              onClick={() => setIsProfileLink(!isProfileLink)}
+              onClick={() => {
+                setIsProfileLink(!isProfileLink);
+                setIsSetting(false);
+              }}
               className="bg-gray-50 w-[90%] flex flex-row items-center
               justify-around p-3 rounded-full shadow-2xl cursor-pointer"
             >
-              <img
-                className="w-[4rem] h-auto rounded-full"
-                src={`${process.env.REACT_APP_BACKEND_URL}/files/${profile.avatar}`}
-                alt=""
-              />
+              {profile.avatar !== null ? (
+                <img
+                  className="w-[4rem] h-auto rounded-full"
+                  src={`${process.env.REACT_APP_BACKEND_URL}/files/${profile.avatar}`}
+                  alt=""
+                />
+              ) : (
+                <></>
+              )}
+
               <div className="flex flex-col justify-center items-center">
                 <h1 className="font-bold">{profile.name}</h1>
                 <p>{profile.isAdmin ? "Administrator" : "Petugas"}</p>

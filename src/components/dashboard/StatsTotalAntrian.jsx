@@ -23,12 +23,12 @@ function StatsTotalAntrian({ theme }) {
 
   return (
     <>
-      <div className="px-6 py-4 m-0 w-full h-full flex flex-col">
+      <div className="px-4 py-2 m-0 w-full h-full flex flex-col ">
         <div className="flex flex-row justify-between gap-3 mb-3">
-          <h1 className={`text-2xl font-semibold ${theme.textprimary} ml-2`}>
+          <h1 className={`text-md font-semibold ${theme.textprimary}`}>
             Layanan
           </h1>
-          <h1 className={`text-2xl font-semibold ${theme.textprimary} ml-2`}>
+          <h1 className={`text-md font-semibold ${theme.textprimary}`}>
             Jumlah Antrian
           </h1>
         </div>

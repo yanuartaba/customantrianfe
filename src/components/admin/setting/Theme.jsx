@@ -141,7 +141,7 @@ function Theme({ defaultTheme }) {
           <h1 className="font-bold text-xl">Theme Setting</h1>
         </div>
 
-        <div className="grid grid-flow-row grid-cols-2 gap-4">
+        <div className="grid grid-flow-row grid-cols-custom2 gap-4">
           <div className="flex flex-col gap-5">
             <div className="flex flex-col">
               <div
@@ -183,7 +183,7 @@ function Theme({ defaultTheme }) {
           </div>
         </div>
 
-        <div className="grid grid-flow-row grid-cols-2 gap-4 mt-5">
+        <div className="grid grid-flow-row grid-cols-custom2 gap-4 mt-5">
           <div>
             <div className="flex flex-col gap-5">
               <div className="flex flex-col gap-2">
@@ -242,6 +242,8 @@ function Theme({ defaultTheme }) {
                       <option value={2}>2 Grid</option>
                       <option value={3}>3 Grid</option>
                       <option value={4}>4 Grid</option>
+                      <option value={5}>5 Grid</option>
+                      <option value={6}>6 Grid</option>
                     </select>
                   </div>
                 </div>

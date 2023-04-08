@@ -143,7 +143,7 @@ function Banner({ theme, durasiTransition, fileMedia }) {
           <h1 className="font-bold text-xl">Banner Setting</h1>
         </div>
 
-        <div className="grid grid-flow-row grid-cols-2 gap-4">
+        <div className="grid grid-flow-row grid-cols-custom2 gap-4">
           <div className="flex flex-col gap-5">
             <div className="flex flex-col">
               <div
@@ -156,7 +156,7 @@ function Banner({ theme, durasiTransition, fileMedia }) {
                   <input
                     type="radio"
                     name="jenisBanner"
-                    // checked={isVideo}
+                    checked={isVideo}
                     onClick={() => filterData(!isVideo)}
                   />
                   <label className="font-semibold">Image</label>
@@ -199,7 +199,7 @@ function Banner({ theme, durasiTransition, fileMedia }) {
           </div>
         </div>
 
-        <div className="grid grid-flow-row grid-cols-2 gap-4 mt-5">
+        <div className="grid grid-flow-row grid-cols-custom2 gap-4 mt-5">
           <div>
             <div className="flex flex-col gap-5">
               <div className="flex flex-col gap-2">
@@ -341,7 +341,7 @@ function Banner({ theme, durasiTransition, fileMedia }) {
 
           <div className=" w-full h-auto">
             <div className="p-3">
-              <Preview media={selectedMedia} width={"100%"} height={"360px"} />
+              <Preview media={selectedMedia} width={495} height={275} />
             </div>
           </div>
         </div>

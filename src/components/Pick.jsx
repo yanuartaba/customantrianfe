@@ -1,44 +1,53 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Menu } from "../components/index";
-// import { localString, dataMenu } from '../utils/data';
 
-function Pick({ theme, logoHeader, headerText }) {
-  // let localData = localStorage.getItem('listAntrian');
-  // const [listAntrian, setListAntrian] = useState(localData ? JSON.parse(localData) : [])
+function Pick({ theme, logoHeader, headerText, grid, logoPrint, textPrint }) {
   const [menus, setMenus] = useState([]);
-  // const [params, setParams] = useState("");
-
-  // const speech = (nomor, counter) => {
-  //   const synth = window.speechSynthesis;
-
-  //   const utterThis = new SpeechSynthesisUtterance(
-  //     `Nomor Urut ${nomor}, silahkan ke counter ${counter}`
-  //   );
-  //   utterThis.lang = "id-ID";
-  //   utterThis.rate = 0.8;
-  //   synth.speak(utterThis);
-  // };
+  const [classGrid, setClassGrid] = useState("");
+  // console.log(grid);
 
   const getMenu = async () => {
     const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/menus`);
     const data = res.data;
     setMenus(data);
-    // console.log(menu);
   };
 
   useEffect(() => {
+    const setGrid = () => {
+      switch (grid) {
+        case 3:
+          setClassGrid("grid-cols-custom3");
+          break;
+        case 4:
+          setClassGrid("grid-cols-custom4");
+          break;
+        case 5:
+          setClassGrid("grid-cols-custom5");
+          break;
+        case 6:
+          setClassGrid("grid-cols-custom6");
+          break;
+        default:
+          setClassGrid("grid-cols-custom2");
+      }
+    };
+    setGrid();
     getMenu();
-  }, []);
+  }, [grid]);
 
   return (
     <>
       <div className="w-full md:w-[75%] min-h-screen flex flex-col items-center justify-center">
-        <div className="w-full min-h-[30rem] flex flex-col items-center gap-10 justify-center">
-          <h1 className="text-6xl text-black font-semibold tracking-wide text-center">
+        <div className="w-full min-h-[35rem] flex flex-col items-center gap-4 justify-center">
+          <h1 className="text-4xl text-black font-semibold tracking-wide text-center">
             SILAHKAN AMBIL NOMOR ANTRIAN
           </h1>
-          <div className="w-full h-auto  p-3 m-3 flex flex-wrap gap-5 justify-center">
+          <div
+            className={`${
+              grid < 4 ? "w-[50%]" : "w-full"
+            } h-full p-3 m-3 grid ${classGrid} auto-cols-max gap-4 content-center`}
+          >
             {menus.map((menu) => (
               <Menu
                 key={menu.id}
@@ -46,6 +55,8 @@ function Pick({ theme, logoHeader, headerText }) {
                 theme={theme}
                 headerText={headerText}
                 logoHeader={logoHeader}
+                logoPrint={logoPrint}
+                textPrint={textPrint}
               />
             ))}
           </div>

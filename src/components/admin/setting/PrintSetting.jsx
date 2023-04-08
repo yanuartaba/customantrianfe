@@ -110,7 +110,7 @@ function PrintSetting({ theme }) {
           <h1 className="font-bold text-xl">Print Resi Setting</h1>
         </div>
 
-        <div className="grid grid-flow-row grid-cols-2 gap-4">
+        <div className="grid grid-flow-row grid-cols-custom2 gap-4">
           <div className="flex flex-col gap-5">
             <div className="flex flex-col">
               <div
@@ -142,6 +142,7 @@ function PrintSetting({ theme }) {
                 <div className="w-full flex flex-col">
                   <input
                     value={headerText}
+                    maxLength={15}
                     onChange={(e) => setHeaderText(e.target.value)}
                     className="mt-1 block w-full px-3 py-2 bg-[#EDF3FE] border border-slate-300 rounded-md text-sm shadow-sm placeholder-gray-500
                                 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:bg-white"
@@ -152,7 +153,7 @@ function PrintSetting({ theme }) {
           </div>
         </div>
 
-        <div className="grid grid-flow-row grid-cols-2 gap-4 mt-5">
+        {/* <div className="grid grid-flow-row grid-cols-2 gap-4 mt-5">
           <div>
             <div className="flex flex-col gap-5">
               <div className="flex flex-col gap-2">
@@ -181,7 +182,7 @@ function PrintSetting({ theme }) {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       <div className="fixed bottom-10 right-10">

@@ -43,7 +43,7 @@ const Text = ({ media, durasi }) => {
 
   useEffect(() => {
     const { type, url, isAsset } = { ...media[0] };
-    console.log(media.length);
+    // console.log(media.length);
     setItem(type);
     setUrl(url);
     setIsAsset(isAsset);
@@ -106,8 +106,10 @@ const Text = ({ media, durasi }) => {
           </video>
         </div>
       ) : (
-        <div className="w-auto h-[672px] flex flex-col justify-center items-center bg-red-400">
-          <div className="w-full h-full flex justify-center items-center relative">
+        <div
+          className={`w-auto h-[70vh] flex flex-col justify-center items-center bg-slate-300`}
+        >
+          <div className="w-full h-[70vh] flex justify-center items-center relative">
             {/* <iframe
               onLoad={loadYoutube}
               onEnded={endYoutube}
@@ -120,10 +122,10 @@ const Text = ({ media, durasi }) => {
             ></iframe> */}
             <YouTube
               className={"rounded-lg"}
-              videoId="RiRqjpmdeEA"
+              videoId={url}
               opts={{
-                width: "920",
-                height: "672",
+                width: "660",
+                height: "455",
                 playerVars: {
                   autoplay: 1,
                   controls: 1,

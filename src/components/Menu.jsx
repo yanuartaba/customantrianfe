@@ -10,12 +10,13 @@ import socketIO from "socket.io-client";
 
 const Menu = (props) => {
   const socket = socketIO.connect(`${process.env.REACT_APP_BACKEND_URL}`);
-
+  // console.log(props.textPrint);
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [socketId, setSocketId] = useState("");
   pdfMake.vfs = pdfFonts.pdfMake.vfs;
   const [showTooltip, setShowTooltip] = useState(false);
-  const { label, image, urlParam, description, codeGroup } = props.menu;
+  const { label, image, urlParam, description, codeGroup, isActive } =
+    props.menu;
   const [date, setDate] = useState("");
   const themeRef = useRef(null);
   const HandleNewAntrian = async (e) => {
@@ -47,7 +48,7 @@ const Menu = (props) => {
           alignment: "center",
         },
         {
-          text: props.headerText,
+          text: props.textPrint,
           fontSize: 48,
           alignment: "center",
           margin: [20, 0, 20, 0],
@@ -87,7 +88,7 @@ const Menu = (props) => {
         },
       ],
       images: {
-        header: `${process.env.REACT_APP_BACKEND_URL}/files/${props.logoHeader}`,
+        header: `${process.env.REACT_APP_BACKEND_URL}/files/${props.logoPrint}`,
       },
       superMargin: {
         margin: [10, 0, 10, 0],
@@ -130,44 +131,63 @@ const Menu = (props) => {
 
   return (
     <>
-      <motion.div
-        whileHover={{ scale: 1.1 }}
-        ref={themeRef}
-        className={` ${props.theme.primary} w-[15rem] h-[15rem] relative  shadow-lg rounded-lg my-5 mx-10 flex flex-col justify-center items-center overflow-hidden`}
-      >
-        <AiOutlineQuestionCircle
-          onClick={() => setShowTooltip(true)}
-          className="absolute top-3 text-2xl right-3 transition duration-150 ease-in-out text-gray-100"
-        />
-        {showTooltip && (
-          <motion.div
-            initial={{ rotateY: 180 }}
-            animate={{ rotateY: 360 }}
-            exit={{ rotateY: 0 }}
-            // onClick={() => setShowTooltip(false)}
-            className="bg-slate-700 absolute w-full h-full flex flex-col items-center justify-center"
-          >
-            <div className="w-full text-left relative">
-              <BiArrowBack
-                className="text-gray-100 text-2xl absolute -top-6 left-2"
-                onClick={() => setShowTooltip(false)}
-              />
-            </div>
-            <p className="text-slate-200 p-3 font-semibold">
-              {" "}
-              <i>{description}</i>
-            </p>
-          </motion.div>
-        )}
-
-        <img
+      {isActive && (
+        <motion.div
           onClick={HandleNewAntrian}
-          className="w-40 h-40"
-          src={`${process.env.REACT_APP_BACKEND_URL}/files/${image}`}
-          alt={urlParam}
-        />
-        <h1 className="text-2xl font-semibold text-gray-100">{label}</h1>
-      </motion.div>
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          ref={themeRef}
+          className={` ${props.theme.primary} w-full h-full relative col-auto  shadow-lg rounded-lg my-2 py-2 m-auto flex flex-col justify-center items-center overflow-hidden cursor-pointer`}
+        >
+          {description && (
+            <AiOutlineQuestionCircle
+              onClick={() => setShowTooltip(true)}
+              className="absolute top-3 text-2xl right-3 transition duration-150 ease-in-out text-gray-100"
+            />
+          )}
+
+          {showTooltip && (
+            <motion.div
+              initial={{ rotateY: 180 }}
+              animate={{ rotateY: 360 }}
+              exit={{ rotateY: 0 }}
+              // onClick={() => setShowTooltip(false)}
+              className="bg-slate-700 absolute w-full h-full flex flex-col items-start justify-start"
+            >
+              <div className="w-full text-left relative h-7">
+                <BiArrowBack
+                  className="text-gray-100 text-2xl absolute top-2 left-2"
+                  onClick={() => setShowTooltip(false)}
+                />
+              </div>
+              <p className="text-slate-200 p-3 font-semibold">
+                {" "}
+                <i>{description}</i>
+              </p>
+            </motion.div>
+          )}
+
+          {image !== "" ? (
+            <img
+              // onClick={HandleNewAntrian}
+              className="w-40 h-40"
+              src={`${process.env.REACT_APP_BACKEND_URL}/files/${image}`}
+              alt={urlParam}
+            />
+          ) : (
+            <div
+              // onClick={HandleNewAntrian}
+              className="flex justify-center items-center h-[7rem] w-[7rem] rounded-full bg-slate-200 my-2"
+            >
+              <h1 className="text-center text-4xl font-bold">{codeGroup}</h1>
+            </div>
+          )}
+
+          <h1 className="text-2xl font-semibold text-gray-100 px-2 text-center leading-6">
+            {label}
+          </h1>
+        </motion.div>
+      )}
     </>
   );
 };

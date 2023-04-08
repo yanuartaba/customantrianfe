@@ -83,6 +83,7 @@ function Insource() {
           setIsLoading(false);
           setFile(null);
           setCanUpload(false);
+          window.location.reload(false);
         } catch (error) {
           setIsLoading(false);
           setFile(null);
@@ -103,8 +104,8 @@ function Insource() {
     <>
       {isLoading && (
         <div
-          tabindex="-1"
-          class="backdrop-blur-sm bg-slate-400 bg-opacity-50 fixed top-0 left-0 right-0 z-50  p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full flex flex-col justify-center items-center"
+          tabIndex="-1"
+          className="backdrop-blur-sm bg-slate-400 bg-opacity-50 fixed top-0 left-0 right-0 z-50  p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full flex flex-col justify-center items-center"
         >
           <Blocks
             visible={true}

@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { VscError } from "react-icons/vsc";
 import { useNavigate } from "react-router-dom";
 import { Blocks } from "react-loader-spinner";
@@ -15,42 +15,41 @@ function Outsource() {
   const [canUpload, setCanUpload] = useState(false);
   // const [embedLink, setEmbedLink] = useState("");
   const [idVideo, setIdVideo] = useState("");
+  const [click, setClick] = useState(0);
 
-  const urlPatternValidation = (URL) => {
-    const regex = new RegExp(
-      "(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?"
-    );
-    return regex.test(URL);
+  const urlYoutube = (URL) => {
+    const regex =
+      /^(?:https?:\/\/)?(?:www\.)?(?:m\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/)?([a-zA-Z0-9\-_]+)/;
+
+    const match = url.match(regex);
+
+    // if (match) {
+    //   const videoId = match[1];
+    //   setIdVideo(videoId);
+    // }
+    return match;
   };
 
-  const getInfoUrl = () => {
+  const getInfoUrl = async () => {
     setIsLoading(true);
-
+    setClick(click + 1);
     setTimeout(() => {
-      const testUrl = urlPatternValidation(url);
-
-      if (!testUrl) {
+      const isYoutube = urlYoutube(url);
+      if (!isYoutube) {
         setIsUrl(false);
-        setErrorMsg("Format url tidak tepat");
+        setErrorMsg("Hanya memperbolehkan youtube url");
         setCanUpload(false);
       } else {
+        setIdVideo(isYoutube);
         setIsUrl(true);
-
-        const regex = /\byoutube\b/gm;
+        setCanUpload(true);
         embedVideo(url);
-        if (regex.exec(url) === null) {
-          setIsUrl(false);
-          setErrorMsg("Hanya memperbolehkan youtube url");
-        } else {
-          setIsUrl(true);
-          setCanUpload(true);
-          ok();
-          // console.log(url);
-        }
+        ok();
       }
 
+      console.log(idVideo);
       setIsLoading(false);
-    }, 2000);
+    }, 1000);
   };
 
   const embedVideo = (yotubeUrl) => {
@@ -60,6 +59,7 @@ function Outsource() {
     // const newLink = `https://www.youtube.com/embed/${idVideo}?autoplay=1&mute=1&controls=0&showinfo=0&enablejsapi=1`;
     // setEmbedLink(newLink);
     setIdVideo(splitUrl[1]);
+    // setCanUpload(true);
   };
 
   const ok = () => {
@@ -86,16 +86,12 @@ function Outsource() {
     }
   };
 
-  useEffect(() => {
-    // console.log(url, type, isVideo);
-  }, [url, canUpload]);
-
   return (
     <>
       {isLoading && (
         <div
-          tabindex="-1"
-          class="backdrop-blur-sm bg-slate-400 bg-opacity-50 fixed top-0 left-0 right-0 z-50  p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full flex flex-col justify-center items-center"
+          tabIndex="-1"
+          className="backdrop-blur-sm bg-slate-400 bg-opacity-50 fixed top-0 left-0 right-0 z-50  p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full flex flex-col justify-center items-center"
         >
           <Blocks
             visible={true}
@@ -121,23 +117,20 @@ function Outsource() {
           )}
 
           <div>
-            <label for="hs-trailing-button-add-on" class="sr-only">
-              Label
-            </label>
-            <div class="flex rounded-md shadow-sm">
+            <div className="flex rounded-md shadow-sm">
               <input
                 onChange={(e) => setUrl(e.target.value)}
                 onPaste={(e) => setUrl(e.target.value)}
                 type="text"
                 id="hs-trailing-button-add-on"
                 name="hs-trailing-button-add-on"
-                class="py-3 px-4 block w-full border border-slate-300  text-sm shadow-sm placeholder-gray-500
+                className="py-3 px-4 block w-full border border-slate-300  text-sm shadow-sm placeholder-gray-500
                         focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:bg-white"
               />
               <button
                 onClick={getInfoUrl}
                 type="button"
-                class="py-3 px-4 inline-flex flex-shrink-0 justify-center items-center gap-2 rounded-r-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm"
+                className="py-3 px-4 inline-flex flex-shrink-0 justify-center items-center gap-2 rounded-r-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm"
               >
                 Get Info
               </button>
@@ -147,15 +140,17 @@ function Outsource() {
       </div>
 
       <div className="w-full justify-start mt-4">
-        <button
-          onClick={uploadMedia}
-          disabled={!canUpload}
-          className={`px-4 py-2  ${
-            canUpload ? "bg-blue-500" : "bg-gray-500"
-          }  text-gray-50 rounded-md`}
-        >
-          Upload
-        </button>
+        {click > 1 && (
+          <button
+            onClick={uploadMedia}
+            disabled={!canUpload}
+            className={`px-4 py-2  ${
+              canUpload ? "bg-blue-500" : "bg-gray-500"
+            }  text-gray-50 rounded-md`}
+          >
+            Upload
+          </button>
+        )}
       </div>
     </>
   );

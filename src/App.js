@@ -19,6 +19,7 @@ import axios from "axios";
 import { applyTheme } from "./themes/option";
 import Profile from "./components/admin/Profile";
 import LoginRoute from "./utils/LoginRoute";
+import PetugasRoute from "./utils/PetugasRoute";
 
 function App() {
   const [isNav, setIsNav] = useState(true);
@@ -27,7 +28,28 @@ function App() {
   const [logoHeader, setLogoHeader] = useState("");
   const [durasi, setDurasi] = useState(0);
   const [fileMedia, setFileMedia] = useState([]);
+  const [grid, setGrid] = useState(4);
   const location = useLocation();
+  const [logoPrint, setLogoPrint] = useState("");
+  const [textPrint, setTextPrint] = useState("");
+
+  // componentDidMount() {
+  const getSetTheme = async () => {
+    const set = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/setting`);
+    // console.log(set.data.text_print);
+    // document.body.classList.add(`theme-${set.data.theme.toLowerCase()}`);
+    // console.log(set.data.theme);
+    // setTheme("theme-" + set.data.theme.toLowerCase());
+    setTheme(applyTheme(set.data.theme));
+    setText(set.data.text_header);
+    setLogoHeader(set.data.logo_header);
+    setDurasi(set.data.durasi_transition);
+    setFileMedia(JSON.parse(set.data.file_banner));
+    setGrid(set.data.grid);
+    setLogoPrint(set.data.logo_print);
+    setTextPrint(set.data.text_print);
+  };
+  // }
 
   useEffect(() => {
     const path = location.pathname;
@@ -40,23 +62,26 @@ function App() {
       setIsNav(false);
     }
 
-    const getSetTheme = async () => {
-      const set = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/setting`
-      );
-
-      // document.body.classList.add(`theme-${set.data.theme.toLowerCase()}`);
-      // console.log(set.data.theme);
-      // setTheme("theme-" + set.data.theme.toLowerCase());
-      setTheme(applyTheme(set.data.theme));
-      setText(set.data.text_header);
-      setLogoHeader(set.data.logo_header);
-      setDurasi(set.data.durasi_transition);
-      setFileMedia(JSON.parse(set.data.file_banner));
-    };
+    // const getSetTheme = async () => {
+    //   const set = await axios.get(
+    //     `${process.env.REACT_APP_BACKEND_URL}/setting`
+    //   );
+    //   // console.log(set.data.text_print);
+    //   // document.body.classList.add(`theme-${set.data.theme.toLowerCase()}`);
+    //   // console.log(set.data.theme);
+    //   // setTheme("theme-" + set.data.theme.toLowerCase());
+    //   setTheme(applyTheme(set.data.theme));
+    //   setText(set.data.text_header);
+    //   setLogoHeader(set.data.logo_header);
+    //   setDurasi(set.data.durasi_transition);
+    //   setFileMedia(JSON.parse(set.data.file_banner));
+    //   setGrid(set.data.grid);
+    //   setLogoPrint(set.data.logo_print);
+    //   setTextPrint(set.data.text_print);
+    // };
 
     getSetTheme();
-    // console.log(logoHeader);
+    // console.log(textPrint);
   }, [location]);
 
   return (
@@ -71,20 +96,28 @@ function App() {
           <Route
             path="/"
             element={
-              <Pick theme={theme} headerText={text} logoHeader={logoHeader} />
+              <Pick
+                theme={theme}
+                headerText={text}
+                logoHeader={logoHeader}
+                grid={grid}
+                logoPrint={logoPrint}
+                textPrint={textPrint}
+              />
             }
           />
-          <Route element={<LoginRoute />}>
-            <Route path="/login" element={<LoginCounter />} />
-          </Route>
-          <Route element={<AdminRoute />}>
+
+          <Route
+            path="/login"
+            element={<LoginCounter logoHeader={logoHeader} />}
+          />
+
+          <Route path="/screen" element={<Screen theme={theme} />} />
+
+          <Route element={<PetugasRoute />}>
             <Route path="/dashboard" element={<Dashboard theme={theme} />} />
           </Route>
-          <Route path="/screen" element={<Screen theme={theme} />} />
-          {/* <Route
-            path="/print"
-            element={<Print headerText={text} logoHeader={logoHeader} />}
-          /> */}
+
           <Route element={<AdminRoute />}>
             <Route path="/admin" element={<Admin theme={theme} />}>
               <Route path="/admin/home" element={<Home />} />

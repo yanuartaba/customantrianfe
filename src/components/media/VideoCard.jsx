@@ -3,11 +3,6 @@ import FooterCard from "./FooterCard";
 import YouTube from "react-youtube";
 
 function VideoCard({ isAsset, url, id, theme }) {
-  // const { isAsset, url, id } = { ...props };
-
-  // console.log(theme);
-  // console.log(props);
-
   return (
     <>
       {isAsset ? (
@@ -28,17 +23,18 @@ function VideoCard({ isAsset, url, id, theme }) {
         <div
           className={`w-auto h-auto flex flex-col justify-center items-center border-solid border-2 ${theme.secondary} rounded-md`}
         >
-          <div className="w-full h-auto flex justify-center items-center relative">
+          <div className="w-full h-auto flex justify-center items-center relative m-auto">
             {/* <iframe
               title={url}
               className="overflow-hidden w-full h-[200px]"
               src={url}
             ></iframe> */}
             <YouTube
+              className="m-auto"
               videoId={url}
               opts={{
-                width: "515",
                 height: "220",
+                width: "328",
                 playerVars: {
                   autoplay: 0,
                   controls: 1,
