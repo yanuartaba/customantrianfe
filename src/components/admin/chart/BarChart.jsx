@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -7,9 +7,8 @@ import {
   Title,
   Tooltip,
   Legend,
-} from "chart.js";
-import { Bar } from "react-chartjs-2";
-import faker from "faker";
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
 
 ChartJS.register(
   CategoryScale,
@@ -20,34 +19,58 @@ ChartJS.register(
   Legend
 );
 
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: "top",
+function BarChart({ summary }) {
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Chart Total Antrian',
+      },
     },
-    title: {
-      display: true,
-      text: "Chart Jumlah Antrian",
-    },
-  },
-};
+  };
 
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
+  const [labels, setLabels] = useState([]);
+  const [jmlAntrian, setJmlAntrian] = useState([]);
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: 'Jumlah antrian',
+        data: jmlAntrian,
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      },
+    ],
+  };
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "Antrian",
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-    },
-  ],
-};
+  useEffect(() => {
+    const mapSummary = summary?.totalAntrian?.map((item) => {
+      return item.label;
+    });
 
-function BarChart() {
-  return <Bar options={options} data={data} />;
+    mapSummary?.push('Total');
+    setLabels(mapSummary);
+
+    let total = 0;
+    const mapDataSummary = summary?.totalAntrian?.map((item) => {
+      total = total + item._count.antrians;
+      return item._count.antrians;
+    });
+
+    mapDataSummary?.push(total);
+    setJmlAntrian(mapDataSummary);
+  }, [summary]);
+
+  return (
+    <Bar
+      className='bg-slate-50 p-4 my-2 rounded-md shadow-md'
+      options={options}
+      data={data}
+    />
+  );
 }
 
 export default BarChart;

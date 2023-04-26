@@ -1,37 +1,38 @@
-import React, { useEffect, useState } from "react";
-import { Pick, LoginCounter, Dashboard, Screen } from "./components";
-import { Routes, Route, useLocation } from "react-router-dom";
-import Header from "./components/Header";
+import React, { useEffect, useState } from 'react';
+import { Pick, LoginCounter, Dashboard, Screen } from './components';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import Header from './components/Header';
 // import Print from "./components/Print";
-import Admin from "./components/Admin";
-import Counter from "./components/admin/Counter";
-import Home from "./components/admin/Home";
-import Staff from "./components/admin/Staff";
-import Media from "./components/admin/Media";
-import Setting from "./components/admin/Setting";
-import Group from "./components/admin/Group";
-import Banner from "./components/admin/setting/Banner";
-import Theme from "./components/admin/setting/Theme";
-import RunningText from "./components/admin/setting/RunningText";
-import PrintSetting from "./components/admin/setting/PrintSetting";
-import AdminRoute from "./utils/AdminRoute";
-import axios from "axios";
-import { applyTheme } from "./themes/option";
-import Profile from "./components/admin/Profile";
-import LoginRoute from "./utils/LoginRoute";
-import PetugasRoute from "./utils/PetugasRoute";
+import Admin from './components/Admin';
+import Counter from './components/admin/Counter';
+import Home from './components/admin/Home';
+import Staff from './components/admin/Staff';
+import Media from './components/admin/Media';
+import Setting from './components/admin/Setting';
+import Group from './components/admin/Group';
+import Banner from './components/admin/setting/Banner';
+import Theme from './components/admin/setting/Theme';
+import RunningText from './components/admin/setting/RunningText';
+import PrintSetting from './components/admin/setting/PrintSetting';
+import AdminRoute from './utils/AdminRoute';
+import axios from 'axios';
+import { applyTheme } from './themes/option';
+import Profile from './components/admin/Profile';
+import LoginRoute from './utils/LoginRoute';
+import PetugasRoute from './utils/PetugasRoute';
+import Secure from './components/admin/setting/Secure';
 
 function App() {
   const [isNav, setIsNav] = useState(true);
-  const [theme, setTheme] = useState("");
-  const [text, setText] = useState("");
-  const [logoHeader, setLogoHeader] = useState("");
+  const [theme, setTheme] = useState('');
+  const [text, setText] = useState('');
+  const [logoHeader, setLogoHeader] = useState('');
   const [durasi, setDurasi] = useState(0);
   const [fileMedia, setFileMedia] = useState([]);
   const [grid, setGrid] = useState(4);
   const location = useLocation();
-  const [logoPrint, setLogoPrint] = useState("");
-  const [textPrint, setTextPrint] = useState("");
+  const [logoPrint, setLogoPrint] = useState('');
+  const [textPrint, setTextPrint] = useState('');
 
   // componentDidMount() {
   const getSetTheme = async () => {
@@ -54,9 +55,9 @@ function App() {
   useEffect(() => {
     const path = location.pathname;
     // console.log(path);
-    if (path === "/login") {
+    if (path === '/login') {
       setIsNav(true);
-    } else if (path === "/print") {
+    } else if (path === '/print') {
       setIsNav(true);
     } else {
       setIsNav(false);
@@ -89,12 +90,12 @@ function App() {
       {!isNav && <Header text={text} logoHeader={logoHeader} />}
       <div
         className={`w-full ${
-          isNav ? "h-full" : "h-[92vh] mt-[8vh]"
+          isNav ? 'h-full' : 'h-[92vh] mt-[8vh]'
         } flex justify-center items-center bg-gray-100 relative theme-default bg-custom-third overflow-y-hidden`}
       >
         <Routes>
           <Route
-            path="/"
+            path='/'
             element={
               <Pick
                 theme={theme}
@@ -108,29 +109,29 @@ function App() {
           />
 
           <Route
-            path="/login"
+            path='/login'
             element={<LoginCounter logoHeader={logoHeader} />}
           />
 
-          <Route path="/screen" element={<Screen theme={theme} />} />
+          <Route path='/screen' element={<Screen theme={theme} />} />
 
           <Route element={<PetugasRoute />}>
-            <Route path="/dashboard" element={<Dashboard theme={theme} />} />
+            <Route path='/dashboard' element={<Dashboard theme={theme} />} />
           </Route>
 
           <Route element={<AdminRoute />}>
-            <Route path="/admin" element={<Admin theme={theme} />}>
-              <Route path="/admin/home" element={<Home />} />
+            <Route path='/admin' element={<Admin theme={theme} />}>
+              <Route path='/admin/home' element={<Home />} />
               <Route
-                path="/admin/counter"
+                path='/admin/counter'
                 element={<Counter theme={theme} />}
               />
-              <Route path="/admin/group" element={<Group theme={theme} />} />
-              <Route path="/admin/staff" element={<Staff theme={theme} />} />
-              <Route path="/admin/media" element={<Media theme={theme} />} />
-              <Route path="/admin/settings" element={<Setting />}>
+              <Route path='/admin/group' element={<Group theme={theme} />} />
+              <Route path='/admin/staff' element={<Staff theme={theme} />} />
+              <Route path='/admin/media' element={<Media theme={theme} />} />
+              <Route path='/admin/settings' element={<Setting />}>
                 <Route
-                  path="/admin/settings/banner"
+                  path='/admin/settings/banner'
                   element={
                     <Banner
                       theme={theme}
@@ -140,20 +141,24 @@ function App() {
                   }
                 />
                 <Route
-                  path="/admin/settings/theme"
+                  path='/admin/settings/theme'
                   element={<Theme defaultTheme={theme} />}
                 />
                 <Route
-                  path="/admin/settings/runningtext"
+                  path='/admin/settings/runningtext'
                   element={<RunningText theme={theme} />}
                 />
                 <Route
-                  path="/admin/settings/print"
+                  path='/admin/settings/print'
                   element={<PrintSetting theme={theme} />}
+                />
+                <Route
+                  path='/admin/settings/secure'
+                  element={<Secure theme={theme} />}
                 />
               </Route>
               <Route
-                path="/admin/profile"
+                path='/admin/profile'
                 element={<Profile theme={theme} />}
               />
             </Route>

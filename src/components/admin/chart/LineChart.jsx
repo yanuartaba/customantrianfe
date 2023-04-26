@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,9 +8,8 @@ import {
   Title,
   Tooltip,
   Legend,
-} from "chart.js";
-import { Line } from "react-chartjs-2";
-import faker from "faker";
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
 
 ChartJS.register(
   CategoryScale,
@@ -26,49 +25,56 @@ export const options = {
   responsive: true,
   plugins: {
     legend: {
-      position: "top",
+      position: 'top',
     },
     title: {
       display: true,
-      text: "Jumlah Antrian Berdasarkan Jenis Counter",
+      text: 'Jumlah Antrian Berdasarkan Jenis Counter',
     },
   },
 };
 
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
+function LineChart({ summary }) {
+  const [labels, setLabels] = useState([]);
+  const [dataLabel, setDataLabel] = useState([]);
+  const data = {
+    labels,
+    datasets: dataLabel,
+  };
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "Teller",
-      data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-    },
-    {
-      label: "Customer Service",
-      data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-      borderColor: "rgb(53, 162, 235)",
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-    },
-    {
-      label: "Loan Officer",
-      data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-      borderColor: "rgb(53, 162, 35)",
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-    },
-    {
-      label: "Insurance Officer",
-      data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-      borderColor: "rgb(23, 162, 135)",
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-    },
-  ],
-};
+  useEffect(() => {
+    const labelSummary = summary?.dataDetail[0].result?.map((data) => {
+      return data.key;
+    });
+    setLabels(labelSummary);
 
-function LineChart() {
-  return <Line options={options} data={data} />;
+    const dataLabelSummary = summary?.dataDetail?.map((data) => {
+      const color = (opacity) =>
+        `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(
+          Math.random() * 255
+        )}, ${Math.floor(Math.random() * 255)}, ${opacity})`;
+
+      data = {
+        label: data.menu.label,
+        data: data.result?.map((n) => {
+          return n._count.antrians;
+        }),
+        borderColor: color(0.7),
+        backgroundColor: color(0.5),
+      };
+      return data;
+    });
+
+    setDataLabel(dataLabelSummary);
+  }, [summary]);
+
+  return (
+    <Line
+      className='bg-slate-50 p-4 my-2 rounded-md shadow-md'
+      options={options}
+      data={data}
+    />
+  );
 }
 
 export default LineChart;
