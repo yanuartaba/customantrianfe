@@ -18,7 +18,6 @@ import AdminRoute from './utils/AdminRoute';
 import axios from 'axios';
 import { applyTheme } from './themes/option';
 import Profile from './components/admin/Profile';
-import LoginRoute from './utils/LoginRoute';
 import PetugasRoute from './utils/PetugasRoute';
 import Secure from './components/admin/setting/Secure';
 
@@ -33,6 +32,8 @@ function App() {
   const location = useLocation();
   const [logoPrint, setLogoPrint] = useState('');
   const [textPrint, setTextPrint] = useState('');
+  const [isBackground, setIsBackgroud] = useState(false);
+  const [backgroundImage, setBackgroundImage] = useState('');
 
   // componentDidMount() {
   const getSetTheme = async () => {
@@ -49,6 +50,8 @@ function App() {
     setGrid(set.data.grid);
     setLogoPrint(set.data.logo_print);
     setTextPrint(set.data.text_print);
+    setIsBackgroud(set.data.background_enable);
+    setBackgroundImage(set.data.background_img);
   };
   // }
 
@@ -104,6 +107,8 @@ function App() {
                 grid={grid}
                 logoPrint={logoPrint}
                 textPrint={textPrint}
+                isBackground={isBackground}
+                backgroundImage={backgroundImage}
               />
             }
           />

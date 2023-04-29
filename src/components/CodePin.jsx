@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { motion } from 'framer-motion';
 
 export const tuts = [
   {
@@ -130,7 +131,8 @@ function CodePin({ isVisible, theme, handleSecurePage }) {
                   <div className='p-4 grid grid-cols-custom3 gap-4'>
                     {tuts &&
                       tuts.map((item, idx) => (
-                        <div
+                        <motion.div
+                          whileTap={{ scale: 0.9 }}
                           key={idx}
                           onClick={() => handleInputPin(item.val, item.action)}
                           className={`p-4 text-center ${theme.primary} ${theme.textwhite} rounded-md cursor-pointer`}
@@ -138,7 +140,7 @@ function CodePin({ isVisible, theme, handleSecurePage }) {
                           <h1 className='text-2xl font-semibold'>
                             {item.label}
                           </h1>
-                        </div>
+                        </motion.div>
                       ))}
                   </div>
                 </div>

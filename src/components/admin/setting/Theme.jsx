@@ -1,20 +1,23 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
-import { Blocks } from "react-loader-spinner";
+import { Blocks } from 'react-loader-spinner';
 
 function Theme({ defaultTheme }) {
   const navigate = useNavigate();
 
-  const [theme, setTheme] = useState("");
-  const [logoHeader, setLogoHeader] = useState("");
+  const [theme, setTheme] = useState('');
+  const [logoHeader, setLogoHeader] = useState('');
   const [grid, setGrid] = useState(0);
-  const [textHeader, setTextHeader] = useState("");
+  const [textHeader, setTextHeader] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [file, setFile] = useState("");
+  const [file, setFile] = useState('');
   const [preview, setPreview] = useState([]);
+  const [isEnable, setIsEnable] = useState(false);
+  const [images, setImages] = useState([]);
+  const [imageSelect, setImageSelect] = useState('');
 
   const saveData = async (logo) => {
     const payload = {
@@ -22,12 +25,14 @@ function Theme({ defaultTheme }) {
       text_header: textHeader,
       theme: theme,
       grid: parseInt(grid),
+      background_enable: isEnable,
+      background_img: imageSelect,
     };
 
     console.log(payload);
 
     await axios.patch(`${process.env.REACT_APP_BACKEND_URL}/setting`, payload, {
-      headers: { codepipe: "GJddPyb9jqK1Bxm68wqLRcYsNPt2UKJC" },
+      headers: { codepipe: 'GJddPyb9jqK1Bxm68wqLRcYsNPt2UKJC' },
     });
 
     setTimeout(() => {
@@ -43,14 +48,14 @@ function Theme({ defaultTheme }) {
     // console.log(file);
     if (file) {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append('file', file);
 
       const res = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/menus/file`,
         formData,
         {
           headers: {
-            "Content-type": "multipart/form-data",
+            'Content-type': 'multipart/form-data',
           },
         }
       );
@@ -77,6 +82,16 @@ function Theme({ defaultTheme }) {
       setLogoHeader(set.data.logo_header);
       setTheme(set.data.theme);
       setPreview(set.data.theme);
+      setIsEnable(set.data.background_enable);
+      setImageSelect(set.data.background_img);
+
+      const datas = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/media`
+      );
+
+      const filter = datas.data.filter((data) => data.isVideo === false);
+
+      setImages(filter);
 
       setTimeout(() => {
         setIsLoading(false);
@@ -90,28 +105,28 @@ function Theme({ defaultTheme }) {
     console.log(e);
     setTheme(e);
     switch (e) {
-      case "REDMINE":
+      case 'REDMINE':
         setPreview({
           primary:
-            "w-[120px] h-[30px] bg-red-600 outline outline-offset-4 outline-1 outline-gray-400 mr-2",
+            'w-[120px] h-[30px] bg-red-600 outline outline-offset-4 outline-1 outline-gray-400 mr-2',
           secondary:
-            "w-[120px] h-[30px] bg-red-200 outline outline-offset-4 outline-1 outline-gray-400 mr-2",
+            'w-[120px] h-[30px] bg-red-200 outline outline-offset-4 outline-1 outline-gray-400 mr-2',
         });
         break;
-      case "SUNSHINE":
+      case 'SUNSHINE':
         setPreview({
           primary:
-            "w-[120px] h-[30px] bg-orange-600 outline outline-offset-4 outline-1 outline-gray-400 mr-2",
+            'w-[120px] h-[30px] bg-orange-600 outline outline-offset-4 outline-1 outline-gray-400 mr-2',
           secondary:
-            "w-[120px] h-[30px] bg-orange-200 outline outline-offset-4 outline-1 outline-gray-400 mr-2",
+            'w-[120px] h-[30px] bg-orange-200 outline outline-offset-4 outline-1 outline-gray-400 mr-2',
         });
         break;
       default:
         setPreview({
           primary:
-            "w-[120px] h-[30px] bg-blue-600 outline outline-offset-4 outline-1 outline-gray-400 mr-2",
+            'w-[120px] h-[30px] bg-blue-600 outline outline-offset-4 outline-1 outline-gray-400 mr-2',
           secondary:
-            "w-[120px] h-[30px] bg-blue-200 outline outline-offset-4 outline-1 outline-gray-400 mr-2",
+            'w-[120px] h-[30px] bg-blue-200 outline outline-offset-4 outline-1 outline-gray-400 mr-2',
         });
     }
   };
@@ -120,62 +135,62 @@ function Theme({ defaultTheme }) {
     <>
       {isLoading && (
         <div
-          tabindex="-1"
-          class="backdrop-blur-sm bg-slate-400 bg-opacity-50 fixed top-0 left-0 right-0 z-50  p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full flex flex-col justify-center items-center"
+          tabIndex='-1'
+          className='backdrop-blur-sm bg-slate-400 bg-opacity-50 fixed top-0 left-0 right-0 z-50  p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full flex flex-col justify-center items-center'
         >
           <Blocks
             visible={true}
-            height="80"
-            width="80"
-            ariaLabel="blocks-loading"
+            height='80'
+            width='80'
+            ariaLabel='blocks-loading'
             wrapperStyle={{}}
-            wrapperClass="blocks-wrapper"
+            wrapperClass='blocks-wrapper'
           />
           <h3>Please wait while saving setting</h3>
         </div>
       )}
-      <div className="w-full flex flex-col gap-3">
+      <div className='w-full flex flex-col gap-3'>
         <div
           className={`w-full ${defaultTheme.primary} text-gray-50 rounded-lg flex flex-col justify-center items-center py-2`}
         >
-          <h1 className="font-bold text-xl">Theme Setting</h1>
+          <h1 className='font-bold text-xl'>Theme Setting</h1>
         </div>
 
-        <div className="grid grid-flow-row grid-cols-custom2 gap-4">
-          <div className="flex flex-col gap-5">
-            <div className="flex flex-col">
+        <div className='grid grid-flow-row grid-cols-custom2 gap-4'>
+          <div className='flex flex-col gap-5'>
+            <div className='flex flex-col'>
               <div
                 className={`w-[60%] ${defaultTheme.secondary} py-2 px-2 rounded-md`}
               >
-                <p className="font-semibold ml-2">Logo Header</p>
+                <p className='font-semibold ml-2'>Logo Header</p>
               </div>
-              <div className="flex flex-col gap-2 p-4">
+              <div className='flex flex-col gap-2 p-4'>
                 <label>File Upload</label>
                 <input
-                  type="file"
+                  type='file'
                   onChange={(e) => {
                     setFile(e.target.files[0]);
                   }}
-                  accept="image/*"
+                  accept='image/*'
                 />
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col gap-5">
-            <div className="flex flex-col">
+          <div className='flex flex-col gap-5'>
+            <div className='flex flex-col'>
               <div
                 className={`w-[60%] ${defaultTheme.secondary} py-2 px-2 rounded-md`}
               >
-                <p className="font-semibold ml-2">Text Header</p>
+                <p className='font-semibold ml-2'>Text Header</p>
               </div>
-              <div className="w-full flex flex-col p-4 gap-1">
-                <div className="w-full flex flex-col">
+              <div className='w-full flex flex-col p-4 gap-1'>
+                <div className='w-full flex flex-col'>
                   <input
                     value={textHeader}
                     onChange={(e) => setTextHeader(e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 bg-[#EDF3FE] border border-slate-300 rounded-md text-sm shadow-sm placeholder-gray-500
-                                focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:bg-white"
+                    className='mt-1 block w-full px-3 py-2 bg-[#EDF3FE] border border-slate-300 rounded-md text-sm shadow-sm placeholder-gray-500
+                                focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:bg-white'
                   />
                 </div>
               </div>
@@ -183,62 +198,58 @@ function Theme({ defaultTheme }) {
           </div>
         </div>
 
-        <div className="grid grid-flow-row grid-cols-custom2 gap-4 mt-5">
+        <div className='grid grid-flow-row grid-cols-custom2 gap-4 mt-5'>
           <div>
-            <div className="flex flex-col gap-5">
-              <div className="flex flex-col gap-2">
+            <div className='flex flex-col gap-5'>
+              <div className='flex flex-col gap-2'>
                 <div
                   className={`w-[60%] ${defaultTheme.secondary} py-2 px-2 rounded-md`}
                 >
-                  <p className="font-semibold ml-2">Main Theme Color</p>
+                  <p className='font-semibold ml-2'>Main Theme Color</p>
                 </div>
 
-                <div className="w-full">
+                <div className='w-full'>
                   <select
                     value={theme}
                     onChange={(e) => changeTheme(e.target.value)}
                     className={`w-[60%] ${defaultTheme.primary} text-gray-50 p-2`}
                   >
-                    <option selected disabled>
-                      Pilih salah satu
-                    </option>
-                    <option value="DEFAULT">Default</option>
-                    <option value="REDMINE">Redmine</option>
-                    <option value="SUNSHINE">Sunshine</option>
+                    <option disabled>Pilih salah satu</option>
+                    <option value='DEFAULT'>Default</option>
+                    <option value='REDMINE'>Redmine</option>
+                    <option value='SUNSHINE'>Sunshine</option>
                   </select>
                 </div>
 
-                <div className="w-[60%] flex flex-row gap-5 items-center justify-between my-3">
-                  <h3 className="font-semibold mr-3">Primary Color</h3>
+                <div className='w-[60%] flex flex-row gap-5 items-center justify-between my-3'>
+                  <h3 className='font-semibold mr-3'>Primary Color</h3>
                   <div className={preview.primary} />
                 </div>
 
-                <div className="w-[60%] flex flex-row gap-5 items-center justify-between my-3">
-                  <h3 className="font-semibold mr-3">Secondary Color</h3>
+                <div className='w-[60%] flex flex-row gap-5 items-center justify-between my-3'>
+                  <h3 className='font-semibold mr-3'>Secondary Color</h3>
                   <div className={preview.secondary} />
                 </div>
               </div>
             </div>
           </div>
 
-          <div className=" w-full h-auto">
-            <div className="flex flex-col gap-5">
-              <div className="flex flex-col">
+          <div className=' w-full h-auto'>
+            <div className='flex flex-col gap-5'>
+              <div className='flex flex-col'>
                 <div
                   className={`w-[60%] ${defaultTheme.secondary} py-2 px-2 rounded-md`}
                 >
-                  <p className="font-semibold ml-2">Grid Setting</p>
+                  <p className='font-semibold ml-2'>Grid Setting</p>
                 </div>
-                <div className="w-full flex flex-col p-4 gap-1">
-                  <div className="w-full flex flex-col">
+                <div className='w-full flex flex-col p-4 gap-1'>
+                  <div className='w-full flex flex-col'>
                     <select
                       value={grid}
                       onChange={(e) => setGrid(e.target.value)}
                       className={`w-[60%] ${defaultTheme.primary} text-gray-50 p-2`}
                     >
-                      <option selected disabled>
-                        Pilih salah satu
-                      </option>
+                      <option disabled>Pilih salah satu</option>
                       <option value={2}>2 Grid</option>
                       <option value={3}>3 Grid</option>
                       <option value={4}>4 Grid</option>
@@ -251,9 +262,75 @@ function Theme({ defaultTheme }) {
             </div>
           </div>
         </div>
+
+        <div className='grid grid-flow-row grid-cols-custom2 gap-4 mt-5'>
+          <div>
+            <div className='flex flex-col gap-5'>
+              <div className='flex flex-col gap-2'>
+                <div
+                  className={`w-[60%] ${defaultTheme.secondary} py-2 px-2 rounded-md`}
+                >
+                  <p className='font-semibold ml-2'>Enable Background Image</p>
+                </div>
+
+                <div className='w-full flex flex-col p-4 gap-1'>
+                  <div className='flex flex-row gap-2'>
+                    <input
+                      type='radio'
+                      name='activeText'
+                      checked={isEnable}
+                      onClick={() => setIsEnable(!isEnable)}
+                    />
+                    <label className='font-semibold'>Active</label>
+                  </div>
+
+                  <div className='flex flex-row gap-2'>
+                    <input
+                      type='radio'
+                      name='activeText'
+                      checked={!isEnable}
+                      onClick={() => setIsEnable(!isEnable)}
+                    />
+                    <label className='font-semibold'>Tidak Active</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className=' w-full h-auto'>
+            <div className='flex flex-col gap-5'>
+              <div className='flex flex-col'>
+                <div
+                  className={`w-[60%] ${defaultTheme.secondary} py-2 px-2 rounded-md`}
+                >
+                  <p className='font-semibold ml-2'>Choose Background Image</p>
+                </div>
+                <div className='w-full flex flex-col p-4 gap-1'>
+                  <div className='w-full flex flex-col'>
+                    <select
+                      value={imageSelect}
+                      onChange={(e) => setImageSelect(e.target.value)}
+                      className={`w-[60%] ${defaultTheme.primary} text-gray-50 p-2`}
+                    >
+                      {images &&
+                        images.map((image) => (
+                          <option key={image.id} value={image.url}>
+                            <div className='flex flex-row'>
+                              <p>{image.url}</p>
+                            </div>
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="fixed bottom-10 right-10">
+      <div className='fixed bottom-10 right-10'>
         <button
           onClick={updateSetting}
           className={`${defaultTheme.secondary} ${defaultTheme.textprimary} ${defaultTheme.hoverPrimary} font-semibold py-2 px-4 rounded-md`}
