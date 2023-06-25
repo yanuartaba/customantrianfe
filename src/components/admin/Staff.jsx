@@ -1,76 +1,65 @@
-import axios from "axios";
-import React, { useState, useEffect } from "react";
-import { GoPencil } from "react-icons/go";
-import DataTable from "react-data-table-component";
-import { Blocks } from "react-loader-spinner";
-import CreateUserModal from "./user/CreateUserModal";
-import EditUserModal from "./user/EditUserModal";
+import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { GoPencil } from 'react-icons/go';
+import DataTable from 'react-data-table-component';
+import { Blocks } from 'react-loader-spinner';
+import CreateUserModal from './user/CreateUserModal';
+import EditUserModal from './user/EditUserModal';
+import Header from '../Header';
 
 function setDate(date) {
   const options = {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
   };
   const d = new Date(date);
-  return d.toLocaleDateString("id-ID", options);
+  return d.toLocaleDateString('id-ID', options);
 }
 
-function Staff({ theme }) {
+function Staff() {
   const columns = [
     {
-      name: "No",
+      name: 'No',
       selector: (row, idx) => number + idx,
-      width: "60px",
+      width: '60px',
     },
     {
-      name: "name",
+      name: 'name',
       selector: (row) => row.name,
     },
     {
-      name: "email",
+      name: 'email',
       selector: (row) => row.email,
     },
     {
-      name: "isAdmin",
+      name: 'isAdmin',
       selector: (row) => (
         <>
           <p
             className={`${
               row.isAdmin
-                ? "bg-green-400 px-6 py-1 text-gray-50 rounded-2xl"
-                : "bg-gray-500 px-6 py-1 text-gray-50 rounded-2xl"
+                ? 'bg-green-500 px-6 py-1 text-gray-50 rounded-2xl'
+                : 'bg-gray-500 px-6 py-1 text-gray-50 rounded-2xl'
             }`}
           >
-            {row.isAdmin ? "Admin" : "Petugas"}
+            {row.isAdmin ? 'Super Admin' : 'Admin Room'}
           </p>
         </>
       ),
     },
     {
-      name: "avatar",
-      selector: (row) => (
-        <>
-          <img
-            className="py-3 h-[150px] w-auto"
-            src={`${process.env.REACT_APP_BACKEND_URL}/files/${row.avatar}`}
-            alt=""
-          />
-        </>
-      ),
-    },
-    {
-      name: "Created At",
+      name: 'Created At',
       selector: (row) => setDate(row.createdAt),
     },
     {
-      name: "Action",
+      name: 'Action',
       cell: (row) => (
         <>
-          <div className="flex flex-row gap-2">
+          <div className='flex flex-row gap-2'>
             <p
               onClick={() => toggleEdit(row)}
-              className="text-md cursor-pointer"
+              className='text-md cursor-pointer'
             >
               <GoPencil />
             </p>
@@ -83,31 +72,30 @@ function Staff({ theme }) {
   const customStyles = {
     headCells: {
       style: {
-        paddingLeft: "24px",
-        paddingRight: "12px",
-        background: "#e8f1ff",
-        fontSize: "16px",
-        fontWeight: "bolder",
+        paddingLeft: '24px',
+        paddingRight: '12px',
+        background: '#e8f1ff',
+        fontSize: '16px',
+        fontWeight: 'bolder',
       },
     },
     cells: {
       style: {
-        paddingLeft: "24px",
-        paddingRight: "12px",
+        paddingLeft: '24px',
+        paddingRight: '12px',
       },
     },
     pagination: {
       style: {
-        borderRadius: "0 0 10px 10px",
+        borderRadius: '0 0 10px 10px',
       },
     },
   };
 
   const [number, setNumber] = useState(1);
   const [totalDataPage, setTotalDataPage] = useState(10);
-  const [counters, setCounters] = useState([]);
+  const [users, setUsers] = useState([]);
   const [show, setShow] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [user, setUser] = useState([]);
@@ -121,18 +109,14 @@ function Staff({ theme }) {
   const toggleShow = () => setShow((val) => !val);
 
   const getUsers = async () => {
-    const dataToken = localStorage.getItem("token-counter");
+    const dataToken = localStorage.getItem('token-counter');
 
     const token = JSON.parse(dataToken);
     const data = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/users`, {
       headers: { Authorization: `Bearer ${token.access_token}` },
     });
 
-    // console.log(data.data);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-    setCounters(data.data);
+    setUsers(data.data);
   };
 
   const setPage = (x, y) => {
@@ -149,64 +133,45 @@ function Staff({ theme }) {
 
   return (
     <>
-      {isLoading ? (
-        <>
-          <div
-            tabindex="-1"
-            class="backdrop-blur-sm bg-slate-400 bg-opacity-50 fixed top-0 left-0 right-0 z-50  p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full flex flex-col justify-center items-center"
-          >
-            <Blocks
-              visible={true}
-              height="80"
-              width="80"
-              ariaLabel="blocks-loading"
-              wrapperStyle={{}}
-              wrapperClass="blocks-wrapper"
-            />
-            <h3>Loading</h3>
-          </div>
-        </>
-      ) : (
-        <>
-          {/* Modal */}
-          <CreateUserModal
-            show={show}
-            toggleShow={toggleShow}
-            // getCounter={getUsers()}
-          />
+      <Header isAdmin={true} />
 
-          <EditUserModal
-            showEditModal={showEditModal}
-            toggleEdit={toggleEdit}
-            user={user}
-          />
-
-          {/* End of modal */}
-
-          <div
-            className={`${theme.primary} text-gray-50 flex flex-row justify-between items-center  py-4 rounded-t-lg`}
-          >
-            <div className="flex-auto flex flex-row justify-center items-center relative">
-              <h1 className="text-xl font-bold">Staff</h1>
-              <button
-                onClick={toggleShow}
-                className="absolute right-3 px-7 py-1 bg-gray-200 text-blue-500 rounded-lg font-semibold hover:bg-gray-600 hover:text-gray-200"
-              >
-                Tambah
-              </button>
-            </div>
+      <div className='container-fluid'>
+        <div className='row md:p-10 xl:p-20 flex flex-col gap-4 m-auto'>
+          <div className='flex flex-row justify-between'>
+            <h1 className='text-3xl font-bold'>Staff</h1>
+            <button
+              onClick={toggleShow}
+              className='px-7 py-1 bg-blue-600 text-gray-50 rounded-lg font-semibold hover:bg-blue-500 hover:text-gray-200'
+            >
+              Tambah
+            </button>
           </div>
 
           <DataTable
             columns={columns}
-            data={counters}
+            data={users}
             customStyles={customStyles}
             pagination
             onChangePage={setPage}
             onChangeRowsPerPage={setTotalPage}
           />
-        </>
-      )}
+        </div>
+      </div>
+
+      {/* Modal */}
+      <CreateUserModal
+        show={show}
+        toggleShow={toggleShow}
+        // getCounter={getUsers()}
+      />
+
+      <EditUserModal
+        showEditModal={showEditModal}
+        toggleEdit={toggleEdit}
+        user={user}
+      />
+
+      {/* End of modal */}
     </>
   );
 }

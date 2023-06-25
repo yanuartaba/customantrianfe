@@ -13,19 +13,20 @@ function LoginCounter({ logoHeader }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [counter, setCounter] = useState('');
-  const [counters, setCounters] = useState([]);
+  const [rooms, setRooms] = useState([]);
+  const [selectRoom, setSelectRoom] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [errors, setErrors] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   // const [isValid, setIsValid] = useState(false);
 
   const getListCounter = async () => {
-    const listCounter = await axios.get(
-      `${process.env.REACT_APP_BACKEND_URL}/counter`
+    const listRoom = await axios.get(
+      `${process.env.REACT_APP_BACKEND_URL}/room/all`
     );
 
     // console.log(listCounter.data);
-    setCounters(listCounter.data);
+    setRooms(listRoom.data);
   };
 
   const handleAdmin = async (email, password) => {
@@ -41,7 +42,6 @@ function LoginCounter({ logoHeader }) {
           headers: { Authorization: `Bearer ${accessToken}` },
         }
       );
-
       if (myProfile.data.isAdmin !== true) {
         navigate('/login');
         if (myProfile.data.isAdmin !== true && isAdmin) {
@@ -51,6 +51,10 @@ function LoginCounter({ logoHeader }) {
         navigate('/admin/home');
         localStorage.setItem('token-counter', JSON.stringify(token.data));
         localStorage.setItem('my-profile', JSON.stringify(myProfile.data));
+        localStorage.setItem(
+          'super-admin',
+          JSON.stringify({ superAdmin: true })
+        );
       }
       setIsLoading(false);
     } catch (error) {
@@ -75,36 +79,54 @@ function LoginCounter({ logoHeader }) {
 
       localStorage.setItem('token-counter', JSON.stringify(token.data));
       localStorage.setItem('my-profile', JSON.stringify(myProfile.data));
+      localStorage.setItem(
+        'super-admin',
+        JSON.stringify({ superAdmin: false })
+      );
 
-      const dataCounter = JSON.parse(counter);
+      // const dataCounter = JSON.parse(counter);
       const dataGroup = {
-        counterId: dataCounter.id,
-        noCounter: dataCounter.nomorCounter,
-        group: dataCounter.group,
-        groupName: dataCounter.menu.label,
+        counterId: 1,
+        noCounter: 1,
+        group: 1,
+        groupName: 'Meja Regis',
       };
       localStorage.setItem('login-counter', JSON.stringify(dataGroup));
+
+      const x = rooms.filter((item) => {
+        return item.id === parseInt(selectRoom);
+      });
+      console.log(rooms);
+      console.log(selectRoom);
+      console.log(x[0]);
+      localStorage.setItem('room-control', JSON.stringify(x[0]));
       setIsLoading(false);
       navigate('/dashboard');
     } catch (error) {
       console.log(error);
       setErrors(error.response.data.message);
     }
+    // console.log(rooms);
+    // console.log(typeof selectRoom);
+    // const x = rooms.filter((item) => {
+    //   return item.id === parseInt(selectRoom);
+    // });
+    // console.log(x);
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    try {
-      if (isAdmin) {
-        await handleAdmin(email, password);
-      } else {
-        await handlePetugas(email, password);
-      }
-    } catch (error) {
-      console.log(error);
-      setErrors(error.response.data.message);
+    // try {
+    if (isAdmin) {
+      await handleAdmin(email, password);
+    } else {
+      await handlePetugas(email, password);
     }
+    // } catch (error) {
+    //   console.log(error);
+    //   setErrors(error.response.data.message);
+    // }
   };
 
   useEffect(() => {
@@ -119,10 +141,10 @@ function LoginCounter({ logoHeader }) {
 
   return (
     <>
-      <div className='grid grid-cols-custom8 gap-4 w-full h-[100vh] overflow-hidden'>
-        <div className='w-full h-full flex flex-col items-center justify-center relative col-span-4'>
+      <div className='grid grid-cols-8 gap-4 w-full h-[100vh] overflow-hidden'>
+        <div className='w-full h-full flex flex-col items-center justify-center relative col-span-3'>
           <img src={Bg1} className='absolute left-0 min-h-[100vh]' alt='' />
-          <img src={Ilustrasi1} className='z-10 w-[50%] mt-10' alt='' />
+          <img src={Ilustrasi1} className='z-10 w-[60%] mt-10' alt='' />
           <div className='px-6 py-5 z-10 mt-5'>
             <h1 className='text-3xl text-gray-200 font-semibold px-16'>
               Beberapa klik lagi untuk masuk ke Dashboard Anda.
@@ -132,13 +154,13 @@ function LoginCounter({ logoHeader }) {
             </p>
           </div>
         </div>
-        <div className='w-full h-full col-span-4 flex justify-center items-center'>
+        <div className='w-full h-full col-span-5 flex justify-center items-center'>
           <div className='w-full h-[80vh] flex flex-col items-center justify-evenly'>
             <div className='flex flex-col gap-1 text-center'>
               <div className='flex justify-center'>
                 <img
-                  className='h-[5rem] w-auto'
-                  src={`${process.env.REACT_APP_BACKEND_URL}/files/${logoHeader}`}
+                  className='h-[5rem] w-auto mb-5'
+                  src={'/logo_loket.png'}
                   alt=''
                 />
               </div>
@@ -154,7 +176,7 @@ function LoginCounter({ logoHeader }) {
                 animate={{ opacity: 0.6 }}
                 exit={{ opacity: 1 }}
                 transition={{ duration: 1 }}
-                className='flex flex-col gap-2 w-full bg-red-200 rounded-md border-red-600 border-2 px-6 py-4'
+                className='flex flex-col gap-2 w-[65%] my-4 bg-red-200 rounded-md border-red-600 border-2 px-6 py-4'
               >
                 <div className='flex gap-3 items-center'>
                   <VscError className='text-2xl font-semibold text-red-600' />
@@ -217,23 +239,20 @@ function LoginCounter({ logoHeader }) {
                 <div>
                   <label className='block'>
                     <span className='block text-md font-medium text-slate-700'>
-                      Counter
+                      Room
                     </span>
                   </label>
                   <select
-                    onChange={(e) => setCounter(e.target.value)}
+                    onChange={(e) => setSelectRoom(e.target.value)}
                     className='mt-1 block w-full px-3 py-2 bg-[#EDF3FE] border border-slate-300 rounded-md text-sm shadow-sm placeholder-gray-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:bg-white'
                   >
                     <option disabled selected value={''}>
                       Pilih salah satu
                     </option>
-                    {counters &&
-                      counters.map((counter) => (
-                        <option
-                          key={counter.id}
-                          value={JSON.stringify(counter)}
-                        >
-                          {counter.menu.label} : {counter.nomorCounter}
+                    {rooms &&
+                      rooms.map((room) => (
+                        <option key={room.id} value={room.id}>
+                          Admin {room.roomName}
                         </option>
                       ))}
                   </select>
@@ -246,12 +265,12 @@ function LoginCounter({ logoHeader }) {
                     type='checkbox'
                     onChange={() => setIsAdmin(!isAdmin)}
                   />
-                  <label>Adminstrator</label>
+                  <label>Super Admin</label>
                 </div>
               </div>
 
               <button
-                disabled={counter === '' && isAdmin === false}
+                disabled={selectRoom === '' && isAdmin === false}
                 onClick={handleLogin}
                 className='w-full bg-blue-500 text-gray-100 rounded-md py-4 text-xl font-bold tracking-wide mt-4'
               >

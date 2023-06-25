@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Pick, LoginCounter, Dashboard, Screen } from './components';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import Header from './components/Header';
+// import Header from './components/Header';
 // import Print from "./components/Print";
-import Admin from './components/Admin';
+// import Admin from './components/Admin';
 import Counter from './components/admin/Counter';
 import Home from './components/admin/Home';
 import Staff from './components/admin/Staff';
@@ -20,6 +20,7 @@ import { applyTheme } from './themes/option';
 import Profile from './components/admin/Profile';
 import PetugasRoute from './utils/PetugasRoute';
 import Secure from './components/admin/setting/Secure';
+import Kuota from './components/admin/Kuota';
 
 function App() {
   const [isNav, setIsNav] = useState(true);
@@ -46,7 +47,7 @@ function App() {
     setText(set.data.text_header);
     setLogoHeader(set.data.logo_header);
     setDurasi(set.data.durasi_transition);
-    setFileMedia(JSON.parse(set.data.file_banner));
+    // setFileMedia(JSON.parse(set.data.file_banner));
     setGrid(set.data.grid);
     setLogoPrint(set.data.logo_print);
     setTextPrint(set.data.text_print);
@@ -58,118 +59,97 @@ function App() {
   useEffect(() => {
     const path = location.pathname;
     // console.log(path);
-    if (path === '/login') {
-      setIsNav(true);
+    if (path === '/') {
+      setIsNav(false);
     } else if (path === '/print') {
       setIsNav(true);
     } else {
       setIsNav(false);
     }
-
-    // const getSetTheme = async () => {
-    //   const set = await axios.get(
-    //     `${process.env.REACT_APP_BACKEND_URL}/setting`
-    //   );
-    //   // console.log(set.data.text_print);
-    //   // document.body.classList.add(`theme-${set.data.theme.toLowerCase()}`);
-    //   // console.log(set.data.theme);
-    //   // setTheme("theme-" + set.data.theme.toLowerCase());
-    //   setTheme(applyTheme(set.data.theme));
-    //   setText(set.data.text_header);
-    //   setLogoHeader(set.data.logo_header);
-    //   setDurasi(set.data.durasi_transition);
-    //   setFileMedia(JSON.parse(set.data.file_banner));
-    //   setGrid(set.data.grid);
-    //   setLogoPrint(set.data.logo_print);
-    //   setTextPrint(set.data.text_print);
-    // };
-
     getSetTheme();
-    // console.log(textPrint);
   }, [location]);
 
   return (
     <>
-      {!isNav && <Header text={text} logoHeader={logoHeader} />}
-      <div
+      {/* {!isNav && <Header text={text} logoHeader={logoHeader} />} */}
+      {/* <div
         className={`w-full ${
           isNav ? 'h-full' : 'h-[92vh] mt-[8vh]'
         } flex justify-center items-center bg-gray-100 relative theme-default bg-custom-third overflow-y-hidden`}
-      >
-        <Routes>
-          <Route
-            path='/'
-            element={
-              <Pick
-                theme={theme}
-                headerText={text}
-                logoHeader={logoHeader}
-                grid={grid}
-                logoPrint={logoPrint}
-                textPrint={textPrint}
-                isBackground={isBackground}
-                backgroundImage={backgroundImage}
-              />
-            }
-          />
+      > */}
+      <Routes>
+        <Route
+          path='/'
+          // element={
+          //   <Pick
+          //     theme={theme}
+          //     headerText={text}
+          //     logoHeader={logoHeader}
+          //     grid={grid}
+          //     logoPrint={logoPrint}
+          //     textPrint={textPrint}
+          //     isBackground={isBackground}
+          //     backgroundImage={backgroundImage}
+          //   />
+          // }
+          element={<LoginCounter />}
+        />
 
-          <Route
-            path='/login'
-            element={<LoginCounter logoHeader={logoHeader} />}
-          />
+        <Route
+          path='/login'
+          element={<LoginCounter logoHeader={logoHeader} />}
+        />
 
-          <Route path='/screen' element={<Screen theme={theme} />} />
+        <Route path='/screen' element={<Screen theme={theme} />} />
 
-          <Route element={<PetugasRoute />}>
-            <Route path='/dashboard' element={<Dashboard theme={theme} />} />
+        <Route element={<PetugasRoute />}>
+          <Route path='/dashboard' element={<Dashboard theme={theme} />} />
+        </Route>
+
+        <Route path='/admin/profile' element={<Profile theme={theme} />} />
+
+        <Route element={<AdminRoute />}>
+          {/* <Route path='/admin' element={<Admin theme={theme} />}> */}
+          <Route path='/admin/home' element={<Home />} />
+          <Route path='/admin/kuota' element={<Kuota />} />
+          <Route path='/admin/pengguna' element={<Staff />} />
+
+          <Route path='/admin/counter' element={<Counter theme={theme} />} />
+          <Route path='/admin/group' element={<Group theme={theme} />} />
+          <Route path='/admin/staff' element={<Staff theme={theme} />} />
+          <Route path='/admin/media' element={<Media theme={theme} />} />
+          <Route path='/admin/settings' element={<Setting />}>
+            <Route
+              path='/admin/settings/banner'
+              element={
+                <Banner
+                  theme={theme}
+                  durasiTransition={durasi}
+                  fileMedia={fileMedia}
+                />
+              }
+            />
+            <Route
+              path='/admin/settings/theme'
+              element={<Theme defaultTheme={theme} />}
+            />
+            <Route
+              path='/admin/settings/runningtext'
+              element={<RunningText theme={theme} />}
+            />
+            <Route
+              path='/admin/settings/print'
+              element={<PrintSetting theme={theme} />}
+            />
+            <Route
+              path='/admin/settings/secure'
+              element={<Secure theme={theme} />}
+            />
           </Route>
-
-          <Route element={<AdminRoute />}>
-            <Route path='/admin' element={<Admin theme={theme} />}>
-              <Route path='/admin/home' element={<Home />} />
-              <Route
-                path='/admin/counter'
-                element={<Counter theme={theme} />}
-              />
-              <Route path='/admin/group' element={<Group theme={theme} />} />
-              <Route path='/admin/staff' element={<Staff theme={theme} />} />
-              <Route path='/admin/media' element={<Media theme={theme} />} />
-              <Route path='/admin/settings' element={<Setting />}>
-                <Route
-                  path='/admin/settings/banner'
-                  element={
-                    <Banner
-                      theme={theme}
-                      durasiTransition={durasi}
-                      fileMedia={fileMedia}
-                    />
-                  }
-                />
-                <Route
-                  path='/admin/settings/theme'
-                  element={<Theme defaultTheme={theme} />}
-                />
-                <Route
-                  path='/admin/settings/runningtext'
-                  element={<RunningText theme={theme} />}
-                />
-                <Route
-                  path='/admin/settings/print'
-                  element={<PrintSetting theme={theme} />}
-                />
-                <Route
-                  path='/admin/settings/secure'
-                  element={<Secure theme={theme} />}
-                />
-              </Route>
-              <Route
-                path='/admin/profile'
-                element={<Profile theme={theme} />}
-              />
-            </Route>
-          </Route>
-        </Routes>
-      </div>
+        </Route>
+        {/* </Route> */}
+      </Routes>
+      {/* </div> */}
     </>
   );
 }
