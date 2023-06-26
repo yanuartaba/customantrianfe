@@ -12,7 +12,7 @@ import { FaPowerOff } from 'react-icons/fa';
 
 // import socketIO from 'socket.io-client';
 
-import Cta from '../sound/Airport_Bell.mp3';
+import Cta from './../sound/airportbell.mp3';
 import Bell from '../img/bell.png';
 import BellPlus from '../img/bellPlus.png';
 import axios from 'axios';
@@ -99,6 +99,19 @@ function Dashboard({ theme }) {
     const dataToken = localStorage.getItem('token-counter');
 
     const token = JSON.parse(dataToken);
+    const adminRoom = localStorage.getItem('room-control');
+    const parseAdmin = await JSON.parse(adminRoom);
+    setAdmin(parseAdmin);
+
+    await axios.patch(
+      `${process.env.REACT_APP_BACKEND_URL}/riwayat/${parseAdmin.id}/${tiketId}`,
+      {
+        isProses: 2,
+      },
+      {
+        headers: { Authorization: `Bearer ${token.access_token}` },
+      }
+    );
 
     const antrian = await axios.patch(
       `${process.env.REACT_APP_BACKEND_URL}/tiket/${tiketId}`,

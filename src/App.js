@@ -1,25 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Pick, LoginCounter, Dashboard, Screen } from './components';
 import { Routes, Route, useLocation } from 'react-router-dom';
-// import Header from './components/Header';
-// import Print from "./components/Print";
-// import Admin from './components/Admin';
-import Counter from './components/admin/Counter';
 import Home from './components/admin/Home';
 import Staff from './components/admin/Staff';
-import Media from './components/admin/Media';
-import Setting from './components/admin/Setting';
-import Group from './components/admin/Group';
-import Banner from './components/admin/setting/Banner';
-import Theme from './components/admin/setting/Theme';
-import RunningText from './components/admin/setting/RunningText';
-import PrintSetting from './components/admin/setting/PrintSetting';
 import AdminRoute from './utils/AdminRoute';
 import axios from 'axios';
 import { applyTheme } from './themes/option';
 import Profile from './components/admin/Profile';
 import PetugasRoute from './utils/PetugasRoute';
-import Secure from './components/admin/setting/Secure';
 import Kuota from './components/admin/Kuota';
 
 function App() {
@@ -113,39 +101,6 @@ function App() {
           <Route path='/admin/home' element={<Home />} />
           <Route path='/admin/kuota' element={<Kuota />} />
           <Route path='/admin/pengguna' element={<Staff />} />
-
-          <Route path='/admin/counter' element={<Counter theme={theme} />} />
-          <Route path='/admin/group' element={<Group theme={theme} />} />
-          <Route path='/admin/staff' element={<Staff theme={theme} />} />
-          <Route path='/admin/media' element={<Media theme={theme} />} />
-          <Route path='/admin/settings' element={<Setting />}>
-            <Route
-              path='/admin/settings/banner'
-              element={
-                <Banner
-                  theme={theme}
-                  durasiTransition={durasi}
-                  fileMedia={fileMedia}
-                />
-              }
-            />
-            <Route
-              path='/admin/settings/theme'
-              element={<Theme defaultTheme={theme} />}
-            />
-            <Route
-              path='/admin/settings/runningtext'
-              element={<RunningText theme={theme} />}
-            />
-            <Route
-              path='/admin/settings/print'
-              element={<PrintSetting theme={theme} />}
-            />
-            <Route
-              path='/admin/settings/secure'
-              element={<Secure theme={theme} />}
-            />
-          </Route>
         </Route>
         {/* </Route> */}
       </Routes>

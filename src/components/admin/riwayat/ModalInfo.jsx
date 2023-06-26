@@ -24,7 +24,7 @@ function ModalInfo(props) {
       await finishTiket();
     }
   };
-  // console.log(props.selectTiket);
+  console.log(props.selectTiket);
 
   const toTheRoom = async () => {
     const dataToken = localStorage.getItem('token-counter');
@@ -298,10 +298,18 @@ function ModalInfo(props) {
                               Tiket Selesai
                             </h1>
                             <p className='text-sm'>
-                              {props.selectTiket.durasi}
+                              {props?.riwayat[0]?.durasiAll}
                             </p>
                           </div>
-                          <h1>Jam</h1>
+                          <h1>
+                            Jam:{' '}
+                            {new Date(
+                              props.selectTiket.updatedAt
+                            ).toLocaleTimeString('id-ID', {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })}
+                          </h1>
                         </div>
                       </div>
                     )}

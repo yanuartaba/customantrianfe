@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Ilustrasi1 from '../img/illustrator1.png';
-import Bg1 from '../img/bg1.png';
+import Ilustrasi1 from './../img/illustrator1.png';
+import Bg1 from './../img/bg1.png';
 import { VscError } from 'react-icons/vsc';
 import axios from 'axios';
 import { useEffect } from 'react';
@@ -106,12 +106,6 @@ function LoginCounter({ logoHeader }) {
       console.log(error);
       setErrors(error.response.data.message);
     }
-    // console.log(rooms);
-    // console.log(typeof selectRoom);
-    // const x = rooms.filter((item) => {
-    //   return item.id === parseInt(selectRoom);
-    // });
-    // console.log(x);
   };
 
   const handleLogin = async (e) => {

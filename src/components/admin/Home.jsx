@@ -337,8 +337,11 @@ function Home() {
                                 key={tiket.id}
                                 onClick={() => cancelRiwayat(tiket)}
                                 className={`${
-                                  tiket.status === 2 ? 'hidden' : ''
-                                } p-2 col-span-1 flex flex-col justify-center items-center bg-[#E7F0FF] rounded-md`}
+                                  tiket.status === 2
+                                    ? 'bg-[#FFCDAC]'
+                                    : 'bg-[#E7F0FF]'
+                                } p-2 col-span-1 flex flex-col justify-center items-center  rounded-md`}
+                                disabled={tiket.status === 2}
                               >
                                 <h1 className='text-xl font-semibold'>
                                   {tiket.nomor < 10
