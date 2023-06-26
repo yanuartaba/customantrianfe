@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Ilustrasi1 from './../img/illustrator1.png';
-import Bg1 from './../img/bg1.png';
+// import Ilustrasi1 from './../img/illustrator1.png';
+// import Bg1 from './../img/bg1.png';
 import { VscError } from 'react-icons/vsc';
 import axios from 'axios';
 import { useEffect } from 'react';
@@ -137,8 +137,12 @@ function LoginCounter({ logoHeader }) {
     <>
       <div className='grid grid-cols-8 gap-4 w-full h-[100vh] overflow-hidden'>
         <div className='w-full h-full flex flex-col items-center justify-center relative col-span-3'>
-          <img src={Bg1} className='absolute left-0 min-h-[100vh]' alt='' />
-          <img src={Ilustrasi1} className='z-10 w-[60%] mt-10' alt='' />
+          <img
+            src='/bg1.png'
+            className='absolute left-0 min-h-[100vh]'
+            alt=''
+          />
+          <img src='/illustrator1.png' className='z-10 w-[60%] mt-10' alt='' />
           <div className='px-6 py-5 z-10 mt-5'>
             <h1 className='text-3xl text-gray-200 font-semibold px-16'>
               Beberapa klik lagi untuk masuk ke Dashboard Anda.
