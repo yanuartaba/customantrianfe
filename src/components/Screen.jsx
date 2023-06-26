@@ -64,7 +64,7 @@ function Screen({ theme }) {
       <Header />
 
       <div className='w-full h-full'>
-        <div className='flex flex-cols-5 gap-1 p-8 w-full h-[80vh]'>
+        <div className='flex flex-cols-5 gap-1 p-8 w-full h-[84vh]'>
           {rooms &&
             rooms.map((room) => <ScreenRoom key={room.id} room={room} />)}
         </div>

@@ -20,9 +20,9 @@ function ScreenRoom({ room }) {
     <>
       {room && (
         <div className='card w-full h-full flex flex-col justify-center items-center bg-blue-100'>
-          <div className='h-[52vh] flex justify-center items-center'>
+          <div className='h-[58vh] flex justify-center items-center'>
             {activeTiket && (
-              <h1 className='text-[12rem] font-bold'>
+              <h1 className='text-[8rem] font-bold'>
                 {activeTiket.nomor < 10
                   ? '0' + activeTiket.nomor
                   : activeTiket.nomor}
@@ -32,7 +32,7 @@ function ScreenRoom({ room }) {
           <div
             className={`w-full px-2 ${room.color} flex justify-center rounded-t-xl`}
           >
-            <h1 className='text-3xl p-2 text-gray-50 font-bold'>
+            <h1 className='text-2xl p-2 text-gray-50 font-bold'>
               {room.roomName}
             </h1>
           </div>
@@ -47,7 +47,7 @@ function ScreenRoom({ room }) {
                     room.color
                   }`}
                 >
-                  <h1 className='text-5xl font-semibold text-gray-50'>
+                  <h1 className='text-3xl font-semibold text-gray-50'>
                     {tiket.nomor < 10 ? '0' + tiket.nomor : tiket.nomor}
                   </h1>
                 </div>

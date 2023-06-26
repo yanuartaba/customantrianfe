@@ -157,14 +157,14 @@ function LoginCounter({ logoHeader }) {
             <div className='flex flex-col gap-1 text-center'>
               <div className='flex justify-center'>
                 <img
-                  className='h-[5rem] w-auto mb-5'
+                  className='h-[3rem] w-auto mb-5'
                   src={'/logo_loket.png'}
                   alt=''
                 />
               </div>
-              <h1 className='text-2xl font-semibold'>Selamat Datang di</h1>
-              <h1 className='text-4xl font-bold'>Loket Antrian</h1>
-              <h1 className='text-2xl font-semibold'>
+              <h1 className='text-xl font-semibold'>Selamat Datang di</h1>
+              <h1 className='text-2xl font-bold'>Loket Antrian</h1>
+              <h1 className='text-xl font-semibold'>
                 Satu aplikasi untuk segala kebutuhanmu{' '}
               </h1>
             </div>
@@ -270,7 +270,7 @@ function LoginCounter({ logoHeader }) {
               <button
                 disabled={selectRoom === '' && isAdmin === false}
                 onClick={handleLogin}
-                className='w-full bg-blue-500 text-gray-100 rounded-md py-4 text-xl font-bold tracking-wide mt-4'
+                className='w-full bg-blue-500 text-gray-100 rounded-md py-2 text-xl font-bold tracking-wide mt-4'
               >
                 {isLoading === true ? (
                   <div className='w-full flex justify-center'>

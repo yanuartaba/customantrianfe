@@ -269,8 +269,8 @@ function Dashboard({ theme }) {
   return (
     <>
       <Header isAdmin={true} />
-      <div className='w-full md:w-[85%] lg:w-[65%] h-screen flex flex-row justify-center gap-5 m-auto'>
-        <div className='w-full h-[35rem] relative rounded-md  bg-blue-100 flex flex-col gap-2 justify-center'>
+      <div className='w-full md:w-[85%] lg:w-[65%] mt-3 flex flex-row justify-center gap-5 m-auto'>
+        <div className='w-full h-[33rem] relative rounded-md  bg-blue-100 flex flex-col gap-2 justify-center'>
           <div
             className='absolute top-2 left-2 p-3 bg-slate-50 rounded-lg cursor-pointer'
             onClick={() => logout()}
@@ -278,7 +278,7 @@ function Dashboard({ theme }) {
             <FaPowerOff className='text-md text-red-600 font-bold' />
           </div>
 
-          <h1 className='text-3xl font-bold text-center'>LOKET ANTRIAN</h1>
+          <h1 className='text-2xl font-bold text-center'>LOKET ANTRIAN</h1>
           <div className='flex flex-row w-full px-16 gap-2 mt-4'>
             <div
               className={`w-[50%] h-[12rem] ${theme.secondary} border-4 border-white rounded-md flex flex-col items-center justify-center`}
@@ -292,7 +292,7 @@ function Dashboard({ theme }) {
                     delay: 0.5,
                     repeat: 5,
                   }}
-                  className={`text-9xl font-bold ${theme.textprimary}`}
+                  className={`text-8xl font-bold ${theme.textprimary}`}
                 >
                   {selectTiket.nomor < 10
                     ? '0' + selectTiket.nomor
@@ -303,7 +303,7 @@ function Dashboard({ theme }) {
             <div
               className={`w-[50%] h-[12rem] ${theme.secondary} border-4 border-white rounded-md flex flex-col items-center justify-center`}
             >
-              <h1 className={`text-3xl font-semibold ${theme.textprimary}`}>
+              <h1 className={`text-2xl font-semibold ${theme.textprimary}`}>
                 {admin.roomName}
               </h1>
             </div>
@@ -361,7 +361,7 @@ function Dashboard({ theme }) {
                       : 'bg-blue-500 hover:bg-blue-400'
                   }`}
                 >
-                  <img src={BellPlus} alt='' />
+                  <img src={BellPlus} width={32} alt='' />
                   <h1 className='text-xl font-semibold text-gray-100'>
                     Recall
                   </h1>
@@ -376,7 +376,7 @@ function Dashboard({ theme }) {
                       : ' bg-blue-500 hover:bg-blue-400'
                   }`}
                 >
-                  <img src={Bell} alt='' />
+                  <img src={Bell} width={32} alt='' />
                   <h1 className='text-xl font-semibold text-gray-100'>Call</h1>
                 </motion.button>
               </div>

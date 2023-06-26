@@ -236,13 +236,13 @@ function Home() {
             <h1>{errorMsg}</h1>
           </motion.div>
         )}
-        <div className='flex flex-row h-[86vh]'>
+        <div className='flex flex-row h-[84vh]'>
           <div className='basis-2/3  p-5'>
             <div className='flex flex-col h-full gap-4'>
               <div className='flex flex-col'>
-                <h1 className='text-2xl font-semibold'>Tiket Antrian</h1>
+                <h1 className='text-xl font-semibold'>Tiket Antrian</h1>
                 <div className='flex flex-col'>
-                  <div className='h-[45vh] w-full bg-[#95bbfa] grid grid-cols-8 gap-4 p-10 overflow-y-auto rounded-t-lg'>
+                  <div className='h-[38vh] w-full bg-[#95bbfa] grid grid-cols-8 gap-4 p-10 overflow-y-auto rounded-t-lg'>
                     {/* looping tiket */}
                     {tikets &&
                       tikets.map((tiket) => (
@@ -254,7 +254,7 @@ function Home() {
                         >
                           <button
                             onClick={() => selectedTiket(tiket)}
-                            className={`p-7 rounded-md ${
+                            className={`p-4 rounded-md ${
                               tiket.isIdle ? 'bg-gray-200' : 'bg-[#FFCDAC]'
                             }`}
                             disabled={!tiket.isIdle}
@@ -279,7 +279,7 @@ function Home() {
               </div>
 
               <div className='flex flex-col'>
-                <h1 className='text-2xl font-semibold'>Tiket Selesai</h1>
+                <h1 className='text-xl font-semibold'>Tiket Selesai</h1>
                 <div className='h-[24vh] w-full bg-[#95bbfa] grid grid-cols-8 gap-4 p-10 overflow-y-auto rounded-lg'>
                   {/* looping tiket */}
                   {tikets &&
@@ -292,7 +292,7 @@ function Home() {
                       >
                         <button
                           onClick={() => selectedTiket(tiket)}
-                          className={`p-7 rounded-md bg-green-300`}
+                          className={`p-4 rounded-md bg-green-300`}
                           // disabled={true}
                         >
                           <h1 className='text-3xl font-bold'>
@@ -309,13 +309,13 @@ function Home() {
           <div className='basis-1/3  p-5'>
             <div className='flex flex-col'>
               <div className='flex flex-row justify-between'>
-                <h1 className='text-2xl font-semibold'>Tiket Selesai</h1>
+                <h1 className='text-xl font-semibold'>Tiket Proses</h1>
                 <div className='flex flex-row gap-2 font-bold'>
                   {date} : {time}
                 </div>
               </div>
 
-              <div className='h-[80vh] w-full bg-[#95bbfa] p-5 overflow-y-auto rounded-t-lg'>
+              <div className='h-[78vh] w-full bg-[#95bbfa] p-3 overflow-y-auto rounded-t-lg'>
                 <div className='grid grid-cols-2 gap-4 w-full'>
                   {rooms &&
                     rooms.map((room) => (
@@ -324,9 +324,9 @@ function Home() {
                         className='flex flex-col col-span-1 h-[23vh] bg-[#FFFFFF] rounded-md'
                       >
                         <div
-                          className={`${room.color} text-gray-50 w-full py-2 flex flex-col justify-center items-center rounded-t-md`}
+                          className={`${room.color} text-gray-50 w-full py-1 flex flex-col justify-center items-center rounded-t-md`}
                         >
-                          <h1 className='text-xl font-semibold'>
+                          <h1 className='text-md font-semibold'>
                             {room.roomName}
                           </h1>
                         </div>
@@ -340,10 +340,10 @@ function Home() {
                                   tiket.status === 2
                                     ? 'bg-[#FFCDAC]'
                                     : 'bg-[#E7F0FF]'
-                                } p-2 col-span-1 flex flex-col justify-center items-center  rounded-md`}
+                                } p-1 col-span-1 flex flex-col justify-center items-center  rounded-md`}
                                 disabled={tiket.status === 2}
                               >
-                                <h1 className='text-xl font-semibold'>
+                                <h1 className='text-md font-semibold'>
                                   {tiket.nomor < 10
                                     ? '0' + tiket.nomor
                                     : tiket.nomor}

@@ -19,7 +19,7 @@ function ListAntrian({ lists, admin, theme, recallAntrian, antrianFinish }) {
 
   return (
     <>
-      <div className='bg-blue-100 rounded-md relative w-[22rem] h-[35rem] overflow-y-auto overflow-x-hidden flex flex-col justify-start'>
+      <div className='bg-blue-100 rounded-md relative w-[22rem] h-[33rem] overflow-y-auto overflow-x-hidden flex flex-col justify-start'>
         <div
           className={`w-full sticky top-0 z-10 rounded-tl-md rounded-tr-md bg-blue-500 text-center py-3`}
         >
@@ -44,7 +44,7 @@ function ListAntrian({ lists, admin, theme, recallAntrian, antrianFinish }) {
                   </div>
                 )}
 
-                <h2 className={`text-6xl font-semibold ${theme.textprimary}`}>
+                <h2 className={`text-5xl font-semibold ${theme.textprimary}`}>
                   {antrian.nomor < 10 ? '0' + antrian.nomor : antrian.nomor}
                 </h2>
                 <p className=' text-slate-600 text-sm'>
