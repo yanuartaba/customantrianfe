@@ -53,8 +53,10 @@ function ModalInfo(props) {
         roomId: parseInt(selectRoom),
         isIdle: false,
         noUrutan:
-          jumlahTiket.data.tikets[jumlahTiket.data.tikets.length - 1].noUrutan +
-          1,
+          jumlahTiket.data.tikets.length > 0
+            ? jumlahTiket.data.tikets[jumlahTiket.data.tikets.length - 1]
+                .noUrutan + 1
+            : 1,
       };
       await axios.patch(
         `${process.env.REACT_APP_BACKEND_URL}/tiket/${props.selectTiket.id}`,
