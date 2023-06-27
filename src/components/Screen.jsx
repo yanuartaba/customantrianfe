@@ -58,7 +58,7 @@ function Screen({ theme }) {
 
   return (
     <>
-      <Header />
+      <Header isAdmin={false} />
 
       <div className='w-full h-full'>
         <div className='flex flex-cols-5 gap-1 p-8 w-full h-[84vh]'>

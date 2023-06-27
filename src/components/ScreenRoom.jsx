@@ -41,6 +41,7 @@ function ScreenRoom({ room }) {
             {listTiket &&
               listTiket.map((tiket, idx) => (
                 <div
+                  key={idx}
                   className={`${
                     idx < 4 ? '' : 'hidden'
                   } w-full row-span-1 flex justify-center items-center p-4 ${

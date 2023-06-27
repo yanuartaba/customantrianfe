@@ -64,13 +64,13 @@ function Header({ text, logoHeader, isAdmin }) {
   useEffect(() => {
     const superAdmin = JSON.parse(localStorage.getItem('super-admin'));
 
-    setIsSuperAdmin(superAdmin.superAdmin);
+    setIsSuperAdmin(superAdmin?.superAdmin);
   }, []);
 
   useEffect(() => {
     const myProfile = JSON.parse(localStorage.getItem('my-profile'));
 
-    setName(myProfile.name);
+    setName(myProfile?.name);
   }, []);
 
   return (
