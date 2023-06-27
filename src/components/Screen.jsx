@@ -44,11 +44,8 @@ function Screen({ theme }) {
 
   useEffect(() => {
     const getAllRoom = async () => {
-      const token = JSON.parse(localStorage.getItem('token-counter'));
       await axios
-        .get(`${process.env.REACT_APP_BACKEND_URL}/room`, {
-          headers: { Authorization: `Bearer ${token.access_token}` },
-        })
+        .get(`${process.env.REACT_APP_BACKEND_URL}/room`)
         .then((res) => {
           setRooms(res.data);
         });
