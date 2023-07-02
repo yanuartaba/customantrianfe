@@ -246,8 +246,9 @@ function Home() {
                     {/* looping tiket */}
                     {tikets &&
                       tikets.map((tiket) => (
-                        <div
+                        <motion.div
                           key={tiket.id}
+                          whileTap={{ scale: 0.9 }}
                           className={`w-full h-full row-span-1 ${
                             tiket.status === 1 ? 'flex' : 'hidden'
                           }  justify-center items-center`}
@@ -265,7 +266,7 @@ function Home() {
                                 : tiket.nomor}
                             </h1>
                           </button>
-                        </div>
+                        </motion.div>
                       ))}
                     {/* End of looping tiket */}
                   </div>
@@ -284,8 +285,9 @@ function Home() {
                   {/* looping tiket */}
                   {tikets &&
                     tikets.map((tiket) => (
-                      <div
+                      <motion.div
                         key={tiket.id}
+                        whileTap={{ scale: 0.9 }}
                         className={`w-full h-full row-span-1 ${
                           tiket.status === 3 ? 'flex' : 'hidden'
                         }  justify-center items-center`}
@@ -299,7 +301,7 @@ function Home() {
                             {tiket.nomor < 10 ? '0' + tiket.nomor : tiket.nomor}
                           </h1>
                         </button>
-                      </div>
+                      </motion.div>
                     ))}
                   {/* End of looping tiket */}
                 </div>
@@ -333,8 +335,9 @@ function Home() {
                         <div className='grid grid-cols-4 gap-2 p-2 overflow-y-auto'>
                           {room.tikets.length > 0 &&
                             room.tikets.map((tiket) => (
-                              <button
+                              <motion.button
                                 key={tiket.id}
+                                whileTap={{ scale: 0.9 }}
                                 onClick={() => cancelRiwayat(tiket)}
                                 className={`${
                                   tiket.status === 2
@@ -348,7 +351,7 @@ function Home() {
                                     ? '0' + tiket.nomor
                                     : tiket.nomor}
                                 </h1>
-                              </button>
+                              </motion.button>
                             ))}
                         </div>
                       </div>
