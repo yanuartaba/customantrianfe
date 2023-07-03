@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaUserAstronaut } from 'react-icons/fa';
 import { useNavigate, NavLink } from 'react-router-dom';
+import axios from 'axios';
 
 function Header({ text, logoHeader, isAdmin }) {
   const navigate = useNavigate();
@@ -8,9 +9,11 @@ function Header({ text, logoHeader, isAdmin }) {
   const [date, setDate] = useState('');
   const [time, setTime] = useState(null);
   const [isShowProfile, setIsShowProfile] = useState(false);
+  const [isShowSubRoom, setIsShowSubRoom] = useState(false);
   // const [isAdmin, setIsAdmin] = useState(true);
   const [isSuperAdmin, setIsSuperAdmin] = useState(true);
   const [name, setName] = useState('');
+  const [rooms, setRooms] = useState([]);
 
   const getDate = () => {
     const options = {
@@ -44,6 +47,12 @@ function Header({ text, logoHeader, isAdmin }) {
     navigate('/login');
   };
 
+  const toRoom = (room) => {
+    localStorage.setItem('room-control', JSON.stringify(room));
+
+    // navigate(`/admin/room/${room.id}`);
+  };
+
   useEffect(() => {
     // console.log({ logoHeader });
     const timerId = setInterval(refreshClock, 1000);
@@ -71,6 +80,18 @@ function Header({ text, logoHeader, isAdmin }) {
     const myProfile = JSON.parse(localStorage.getItem('my-profile'));
 
     setName(myProfile?.name);
+  }, []);
+
+  useEffect(() => {
+    const getRooms = async () => {
+      const token = JSON.parse(localStorage.getItem('token-counter'));
+      await axios
+        .get(`${process.env.REACT_APP_BACKEND_URL}/room`, {
+          headers: { Authorization: `Bearer ${token.access_token}` },
+        })
+        .then((res) => setRooms(res.data));
+    };
+    getRooms();
   }, []);
 
   return (
@@ -131,6 +152,33 @@ function Header({ text, logoHeader, isAdmin }) {
                         </NavLink>
                       </li>
                       <li>
+                        <div
+                          onClick={() => {
+                            setIsShowSubRoom(!isShowSubRoom);
+                            setIsShowProfile(false);
+                          }}
+                          className='flex flex-row gap-2 justify-center items-center px-4 py-2 cursor-pointer hover:text-white text-gray-900 rounded hover:bg-blue-600 relative'
+                        >
+                          Room
+                          {isShowSubRoom && (
+                            <div className='absolute -bottom-[9.8rem] min-w-max bg-slate-200 text-gray-700 flex flex-col gap-2 px-6 py-2 rounded-md text-left z-10'>
+                              {rooms &&
+                                rooms.map((room) => (
+                                  <div
+                                    key={room.id}
+                                    onClick={() => toRoom(room)}
+                                    className='text-sm text-left px-2 hover:text-blue-500 w-full'
+                                  >
+                                    <a href={`/admin/room/${room.id}`}>
+                                      {room.roomName}
+                                    </a>
+                                  </div>
+                                ))}
+                            </div>
+                          )}
+                        </div>
+                      </li>
+                      <li>
                         <NavLink
                           to='/admin/kuota'
                           className='block py-2 pl-3 pr-4  hover:text-white text-gray-900 rounded hover:bg-blue-600 '
@@ -177,7 +225,10 @@ function Header({ text, logoHeader, isAdmin }) {
                   </li>
                   <li>
                     <div
-                      onClick={() => setIsShowProfile(!isShowProfile)}
+                      onClick={() => {
+                        setIsShowProfile(!isShowProfile);
+                        setIsShowSubRoom(false);
+                      }}
                       className='flex flex-row gap-2 justify-center items-center px-4 py-2 cursor-pointer bg-blue-600 text-gray-50 rounded-md relative'
                     >
                       <FaUserAstronaut />

@@ -12,10 +12,10 @@ function LoginCounter({ logoHeader }) {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [counter, setCounter] = useState('');
+  // const [counter, setCounter] = useState('');
   const [rooms, setRooms] = useState([]);
   const [selectRoom, setSelectRoom] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(true);
   const [errors, setErrors] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   // const [isValid, setIsValid] = useState(false);
@@ -85,20 +85,18 @@ function LoginCounter({ logoHeader }) {
       );
 
       // const dataCounter = JSON.parse(counter);
-      const dataGroup = {
-        counterId: 1,
-        noCounter: 1,
-        group: 1,
-        groupName: 'Meja Regis',
-      };
-      localStorage.setItem('login-counter', JSON.stringify(dataGroup));
+      // const dataGroup = {
+      //   counterId: 1,
+      //   noCounter: 1,
+      //   group: 1,
+      //   groupName: 'Meja Regis',
+      // };
+      // localStorage.setItem('login-counter', JSON.stringify(dataGroup));
 
       const x = rooms.filter((item) => {
         return item.id === parseInt(selectRoom);
       });
-      console.log(rooms);
-      console.log(selectRoom);
-      console.log(x[0]);
+
       localStorage.setItem('room-control', JSON.stringify(x[0]));
       setIsLoading(false);
       navigate('/dashboard');
@@ -117,10 +115,6 @@ function LoginCounter({ logoHeader }) {
     } else {
       await handlePetugas(email, password);
     }
-    // } catch (error) {
-    //   console.log(error);
-    //   setErrors(error.response.data.message);
-    // }
   };
 
   useEffect(() => {
@@ -233,7 +227,7 @@ function LoginCounter({ logoHeader }) {
                 </label>
               </div>
 
-              {isAdmin === false && (
+              {/* {isAdmin === false && (
                 <div>
                   <label className='block'>
                     <span className='block text-md font-medium text-slate-700'>
@@ -265,7 +259,7 @@ function LoginCounter({ logoHeader }) {
                   />
                   <label>Super Admin</label>
                 </div>
-              </div>
+              </div> */}
 
               <button
                 disabled={selectRoom === '' && isAdmin === false}

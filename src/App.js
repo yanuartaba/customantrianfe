@@ -27,15 +27,10 @@ function App() {
   // componentDidMount() {
   const getSetTheme = async () => {
     const set = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/setting`);
-    // console.log(set.data.text_print);
-    // document.body.classList.add(`theme-${set.data.theme.toLowerCase()}`);
-    // console.log(set.data.theme);
-    // setTheme("theme-" + set.data.theme.toLowerCase());
     setTheme(applyTheme(set.data.theme));
     setText(set.data.text_header);
     setLogoHeader(set.data.logo_header);
     setDurasi(set.data.durasi_transition);
-    // setFileMedia(JSON.parse(set.data.file_banner));
     setGrid(set.data.grid);
     setLogoPrint(set.data.logo_print);
     setTextPrint(set.data.text_print);
@@ -101,6 +96,10 @@ function App() {
           <Route path='/admin/home' element={<Home />} />
           <Route path='/admin/kuota' element={<Kuota />} />
           <Route path='/admin/pengguna' element={<Staff />} />
+          <Route
+            path='/admin/room/:idRoom'
+            element={<Dashboard theme={theme} />}
+          />
         </Route>
         {/* </Route> */}
       </Routes>
