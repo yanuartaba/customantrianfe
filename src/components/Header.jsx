@@ -86,7 +86,7 @@ function Header({ text, logoHeader, isAdmin }) {
     const getRooms = async () => {
       const token = JSON.parse(localStorage.getItem('token-counter'));
       await axios
-        .get(`${process.env.REACT_APP_BACKEND_URL}/room`, {
+        .get(`${process.env.REACT_APP_BACKEND_URL}/room/all`, {
           headers: { Authorization: `Bearer ${token.access_token}` },
         })
         .then((res) => setRooms(res.data));

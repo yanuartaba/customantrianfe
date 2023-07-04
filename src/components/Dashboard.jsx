@@ -254,26 +254,29 @@ function Dashboard({ theme }) {
       const adminRoom = localStorage.getItem('room-control');
       const parseAdmin = await JSON.parse(adminRoom);
       setAdmin(parseAdmin);
-      const lists = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/room/${idRoom}`
-      );
-      setListAntrean(lists.data.tikets);
-      const proses = lists.data.tikets.filter((item) => {
-        return item.status === 2;
-      });
-      if (proses.length > 0) {
-        setSelectTiket(proses[0]);
+      try {
+        const lists = await axios.get(
+          `${process.env.REACT_APP_BACKEND_URL}/room/${idRoom}`
+        );
+        setListAntrean(lists.data.tikets);
+        const proses = lists.data.tikets.filter((item) => {
+          return item.status === 2;
+        });
+        if (proses.length > 0) {
+          setSelectTiket(proses[0]);
+        }
+      } catch (error) {
+        setIsLoading(false);
       }
+
       // console.log(.nomor);
     };
     getListAntrean();
-  }, []);
+  }, [idRoom]);
 
   useEffect(() => {
-    setIsLoading(true);
     setInterval(async () => {
       await getListAntrean();
-      setIsLoading(false);
     }, 1000);
   }, []);
 
