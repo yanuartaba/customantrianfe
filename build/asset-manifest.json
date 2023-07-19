@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/static/css/main.54bda394.css",
-    "main.js": "/static/js/main.c69f1f01.js",
+    "main.css": "/static/css/main.b17c7da6.css",
+    "main.js": "/static/js/main.2524e009.js",
     "static/media/airportbell.mp3": "/static/media/airportbell.e55e8aa17e13d4f2c4d7.mp3",
     "index.html": "/index.html",
-    "main.54bda394.css.map": "/static/css/main.54bda394.css.map",
-    "main.c69f1f01.js.map": "/static/js/main.c69f1f01.js.map"
+    "main.b17c7da6.css.map": "/static/css/main.b17c7da6.css.map",
+    "main.2524e009.js.map": "/static/js/main.2524e009.js.map"
   },
   "entrypoints": [
-    "static/css/main.54bda394.css",
-    "static/js/main.c69f1f01.js"
+    "static/css/main.b17c7da6.css",
+    "static/js/main.2524e009.js"
   ]
 }
