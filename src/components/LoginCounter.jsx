@@ -15,7 +15,7 @@ function LoginCounter({ logoHeader }) {
   // const [counter, setCounter] = useState('');
   const [rooms, setRooms] = useState([]);
   const [selectRoom, setSelectRoom] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [errors, setErrors] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   // const [isValid, setIsValid] = useState(false);
@@ -96,6 +96,8 @@ function LoginCounter({ logoHeader }) {
       const x = rooms.filter((item) => {
         return item.id === parseInt(selectRoom);
       });
+
+      // console.log(x);
 
       localStorage.setItem('room-control', JSON.stringify(x[0]));
       setIsLoading(false);
@@ -227,7 +229,7 @@ function LoginCounter({ logoHeader }) {
                 </label>
               </div>
 
-              {/* {isAdmin === false && (
+              {isAdmin === false && (
                 <div>
                   <label className='block'>
                     <span className='block text-md font-medium text-slate-700'>
@@ -259,10 +261,10 @@ function LoginCounter({ logoHeader }) {
                   />
                   <label>Super Admin</label>
                 </div>
-              </div> */}
+              </div>
 
               <button
-                disabled={selectRoom === '' && isAdmin === false}
+                disabled={selectRoom === null && isAdmin === false}
                 onClick={handleLogin}
                 className='w-full bg-blue-500 text-gray-100 rounded-md py-2 text-xl font-bold tracking-wide mt-4'
               >

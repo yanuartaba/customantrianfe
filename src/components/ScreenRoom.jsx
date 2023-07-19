@@ -20,9 +20,9 @@ function ScreenRoom({ room }) {
     <>
       {room && (
         <div className='card w-full h-full flex flex-col justify-center items-center bg-blue-100'>
-          <div className='h-[58vh] flex justify-center items-center'>
+          <div className='h-[58vh] lg:h-[61vh] flex justify-center items-center'>
             {activeTiket && (
-              <h1 className='text-[8rem] font-bold'>
+              <h1 className='text-[8rem] 2xl:text-[12rem] font-bold'>
                 {activeTiket.nomor < 10
                   ? '0' + activeTiket.nomor
                   : activeTiket.nomor}

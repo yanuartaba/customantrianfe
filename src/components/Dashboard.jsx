@@ -238,7 +238,7 @@ function Dashboard({ theme }) {
     const parseAdmin = await JSON.parse(adminRoom);
     setAdmin(parseAdmin);
     const lists = await axios.get(
-      `${process.env.REACT_APP_BACKEND_URL}/room/${idRoom}`
+      `${process.env.REACT_APP_BACKEND_URL}/room/${parseAdmin.id}`
     );
     setListAntrean(lists.data.tikets);
     const proses = lists.data.tikets.filter((item) => {
@@ -256,7 +256,7 @@ function Dashboard({ theme }) {
       setAdmin(parseAdmin);
       try {
         const lists = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/room/${idRoom}`
+          `${process.env.REACT_APP_BACKEND_URL}/room/${parseAdmin.id}`
         );
         setListAntrean(lists.data.tikets);
         const proses = lists.data.tikets.filter((item) => {

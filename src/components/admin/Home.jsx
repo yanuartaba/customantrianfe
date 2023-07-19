@@ -236,13 +236,13 @@ function Home() {
             <h1>{errorMsg}</h1>
           </motion.div>
         )}
-        <div className='flex flex-row h-[84vh]'>
+        <div className='flex flex-row h-[86vh]'>
           <div className='basis-2/3  p-5'>
             <div className='flex flex-col h-full gap-4'>
               <div className='flex flex-col'>
                 <h1 className='text-xl font-semibold'>Tiket Antrian</h1>
                 <div className='flex flex-col'>
-                  <div className='h-[38vh] w-full bg-[#95bbfa] grid grid-cols-8 gap-4 p-10 overflow-y-auto rounded-t-lg'>
+                  <div className='h-[40vh] 2xl:h-[44vh] w-full bg-[#95bbfa] grid grid-cols-8 gap-4 p-10 overflow-y-auto rounded-t-lg'>
                     {/* looping tiket */}
                     {tikets &&
                       tikets.map((tiket) => (
@@ -272,7 +272,7 @@ function Home() {
                   </div>
                   <button
                     onClick={HandleNewAntrian}
-                    className='w-full py-3 bg-[#E7EFFC] text-xl font-bold rounded-b-lg border border-[#95BBFA] '
+                    className='w-full py-3 bg-[#E7EFFC] text-xl font-bold rounded-b-lg border border-[#95BBFA] hover:bg-blue-600 hover:text-gray-50 '
                   >
                     Cetak Tiket
                   </button>

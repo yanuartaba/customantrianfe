@@ -44,6 +44,8 @@ function Header({ text, logoHeader, isAdmin }) {
     localStorage.setItem('login-counter', null);
     localStorage.setItem('super-admin', null);
 
+    navigate(0);
+
     navigate('/login');
   };
 

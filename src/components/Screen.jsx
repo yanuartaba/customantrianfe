@@ -60,8 +60,8 @@ function Screen({ theme }) {
     <>
       <Header isAdmin={false} />
 
-      <div className='w-full h-full'>
-        <div className='flex flex-cols-5 gap-1 p-8 w-full h-[84vh]'>
+      <div className='w-full h-min-screen '>
+        <div className='flex flex-cols-5 gap-1 p-8 w-full h-[90vh]'>
           {rooms &&
             rooms.map((room) => <ScreenRoom key={room.id} room={room} />)}
         </div>

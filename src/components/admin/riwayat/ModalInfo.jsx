@@ -24,7 +24,6 @@ function ModalInfo(props) {
       await finishTiket();
     }
   };
-  console.log(props.selectTiket);
 
   const toTheRoom = async () => {
     const dataToken = localStorage.getItem('token-counter');

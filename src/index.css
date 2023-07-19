@@ -4,25 +4,31 @@
 
 @layer base {
   :root {
-    --bg-primary-color: #387AF6;;
+    --bg-primary-color: #387af6;
     --bg-secondary-color: #e8f1ff;
-    --bg-third-color: #f5f5f5
+    --bg-third-color: #f5f5f5;
+  }
+
+  #root {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
   }
 
   /* .theme-default {
     
   } */
-  
+
   .theme-redmine {
-    --bg-primary-color: #F74B4B;
+    --bg-primary-color: #f74b4b;
     --bg-secondary-color: #f6e5e5;
-    --bg-third-color: #f5f5f5
+    --bg-third-color: #f5f5f5;
   }
 
   .theme-sunshine {
-    --bg-primary-color: #F7C74B;
+    --bg-primary-color: #f7c74b;
     --bg-secondary-color: #f6f2e5;
-    --bg-third-color: #f5f5f5
+    --bg-third-color: #f5f5f5;
   }
 }
 
